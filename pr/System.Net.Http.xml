@@ -1,0 +1,2413 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>System.Net.Http</name>
+    </assembly>
+    <members>
+        <member name="T:System.Net.Http.CancellationHelper">
+            <summary>Provides utilities related to cancellation.</summary>
+        </member>
+        <member name="F:System.Net.Http.CancellationHelper.s_cancellationMessage">
+            <summary>The default message used by <see cref="T:System.OperationCanceledException"/>.</summary>
+        </member>
+        <member name="M:System.Net.Http.CancellationHelper.ShouldWrapInOperationCanceledException(System.Exception,System.Threading.CancellationToken)">
+            <summary>Determines whether to wrap an <see cref="T:System.Exception"/> in a cancellation exception.</summary>
+            <param name="exception">The exception.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that may have triggered the exception.</param>
+            <returns>true if the exception should be wrapped; otherwise, false.</returns>
+        </member>
+        <member name="M:System.Net.Http.CancellationHelper.CreateOperationCanceledException(System.Exception,System.Threading.CancellationToken)">
+            <summary>Creates a cancellation exception.</summary>
+            <param name="innerException">The inner exception to wrap. May be null.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that triggered the cancellation.</param>
+            <returns>The cancellation exception.</returns>
+        </member>
+        <member name="M:System.Net.Http.CancellationHelper.ThrowOperationCanceledException(System.Exception,System.Threading.CancellationToken)">
+            <summary>Throws a cancellation exception.</summary>
+            <param name="innerException">The inner exception to wrap. May be null.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that triggered the cancellation.</param>
+        </member>
+        <member name="M:System.Net.Http.CancellationHelper.ThrowIfCancellationRequested(System.Threading.CancellationToken)">
+            <summary>Throws a cancellation exception if cancellation has been requested via <paramref name="cancellationToken"/>.</summary>
+            <param name="cancellationToken">The token to check for a cancellation request.</param>
+        </member>
+        <member name="T:System.Net.Http.EmptyContent">
+            <summary>Provides a zero-length HttpContent implementation.</summary>
+        </member>
+        <member name="T:System.Net.Http.HeaderEncodingSelector`1">
+            <summary>
+            Represents a method that specifies the <see cref="T:System.Text.Encoding"/> to use when interpreting header values.
+            </summary>
+            <param name="headerName">Name of the header to specify the <see cref="T:System.Text.Encoding"/> for.</param>
+            <param name="context">The <typeparamref name="TContext"/> we are encoding/decoding the headers for.</param>
+            <typeparam name="TContext">The type which headers are being encoded/decoded;</typeparam>
+            <returns><see cref="T:System.Text.Encoding"/> to use or <see langword="null"/> to use the default behavior.</returns>
+        </member>
+        <member name="P:System.Net.Http.Headers.KnownHeader.KnownValues">
+            <summary>
+            If a raw string is a known value, this instance will be returned rather than allocating a new string.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.Headers.KnownHeaders.GetCandidate``1(``0)">
+            <summary>
+            Find possible known header match via lookup on length and a distinguishing char for that length.
+            </summary>
+            <remarks>
+            Matching is case-insensitive. Because of this, we do not preserve the case of the original header,
+            whether from the wire or from the user explicitly setting a known header using a header name string.
+            </remarks>
+        </member>
+        <member name="M:System.Net.Http.Headers.BaseHeaderParser.GetParsedValueLength(System.String,System.Int32,System.Object,System.Object@)">
+            <summary>
+            Parses a full header or a segment of a multi-value header.
+            </summary>
+            <param name="value">The header value string to parse.</param>
+            <param name="startIndex">The index to begin parsing at.</param>
+            <param name="storeValue"></param>
+            <param name="parsedValue">The resulting value parsed.</param>
+            <returns>If a value could be parsed, the number of characters used to parse that value. Otherwise, 0.</returns>
+        </member>
+        <member name="M:System.Net.Http.Headers.GenericHeaderParser.ParseWithoutValidation(System.String,System.Int32,System.Object@)">
+            <summary>
+            Allows for arbitrary header values without validation (aside from newline, which is always invalid in a header value).
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Headers.HeaderDescriptor._descriptor">
+            <summary>
+            Either a <see cref="T:System.Net.Http.Headers.KnownHeader"/> or <see cref="T:System.String"/>.
+            Marked as nullable since a default (uninitialized) instance of this struct is also used in practice
+            to indicate the end of the header collection.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.Headers.HeaderStringValues">
+            <summary>Provides a collection of header string values.</summary>
+        </member>
+        <member name="F:System.Net.Http.Headers.HeaderStringValues._header">
+            <summary>The associated header.  This is used only for producing a string from <see cref="F:System.Net.Http.Headers.HeaderStringValues._value"/> when it's an array.</summary>
+        </member>
+        <member name="F:System.Net.Http.Headers.HeaderStringValues._value">
+            <summary>A string or string array (or null if the instance is default).</summary>
+        </member>
+        <member name="M:System.Net.Http.Headers.HeaderStringValues.#ctor(System.Net.Http.Headers.HeaderDescriptor,System.String)">
+            <summary>Initializes the instance.</summary>
+            <param name="descriptor">The header descriptor associated with the header value.</param>
+            <param name="value">The header value.</param>
+        </member>
+        <member name="M:System.Net.Http.Headers.HeaderStringValues.#ctor(System.Net.Http.Headers.HeaderDescriptor,System.String[])">
+            <summary>Initializes the instance.</summary>
+            <param name="descriptor">The header descriptor associated with the header values.</param>
+            <param name="values">The header values.</param>
+        </member>
+        <member name="P:System.Net.Http.Headers.HeaderStringValues.Count">
+            <summary>Gets the number of header values in the collection.</summary>
+        </member>
+        <member name="M:System.Net.Http.Headers.HeaderStringValues.ToString">
+            <summary>Gets a string containing all the headers in the collection.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:System.Net.Http.Headers.HeaderStringValues.GetEnumerator">
+            <summary>Gets an enumerator for all of the strings in the collection.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:System.Net.Http.Headers.HeaderStringValues.System#Collections#Generic#IEnumerable{System#String}#GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:System.Net.Http.Headers.HeaderStringValues.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="T:System.Net.Http.Headers.HeaderStringValues.Enumerator">
+            <summary>Enumerates the elements of a <see cref="T:System.Net.Http.Headers.HeaderStringValues"/>.</summary>
+        </member>
+        <member name="F:System.Net.Http.Headers.HeaderStringValues.Enumerator._values">
+            <summary>If this wraps a string[], that array. Otherwise, null.</summary>
+        </member>
+        <member name="F:System.Net.Http.Headers.HeaderStringValues.Enumerator._current">
+            <summary>The current string header value.  If this wraps a single string, that string.</summary>
+        </member>
+        <member name="F:System.Net.Http.Headers.HeaderStringValues.Enumerator._index">
+            <summary>Current state of the iteration.</summary>
+        </member>
+        <member name="M:System.Net.Http.Headers.HeaderStringValues.Enumerator.#ctor(System.Object)">
+            <summary>Initializes the enumerator with a string or string[].</summary>
+            <param name="value">The string or string[] value, or null if this collection is empty.</param>
+        </member>
+        <member name="M:System.Net.Http.Headers.HeaderStringValues.Enumerator.MoveNext">
+            <inheritdoc/>
+        </member>
+        <member name="P:System.Net.Http.Headers.HeaderStringValues.Enumerator.Current">
+            <inheritdoc/>
+        </member>
+        <member name="P:System.Net.Http.Headers.HeaderStringValues.Enumerator.System#Collections#IEnumerator#Current">
+            <inheritdoc/>
+        </member>
+        <member name="M:System.Net.Http.Headers.HeaderStringValues.Enumerator.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:System.Net.Http.Headers.HeaderStringValues.Enumerator.System#Collections#IEnumerator#Reset">
+            <inheritdoc/>
+        </member>
+        <member name="M:System.Net.Http.Headers.HeaderUtilities.AddHexEscaped(System.Byte,System.Text.StringBuilder)">
+            <summary>Transforms an ASCII character into its hexadecimal representation, adding the characters to a StringBuilder.</summary>
+        </member>
+        <member name="T:System.Net.Http.Headers.HeaderEntry">
+            <summary>Key/value pairs of headers. The value is either a raw <see cref="T:System.String"/> or a <see cref="T:System.Net.Http.Headers.HttpHeaders.HeaderStoreItemInfo"/>.</summary>
+        </member>
+        <member name="F:System.Net.Http.Headers.HttpHeaders._headerStore">
+            <summary>Either a <see cref="T:System.Net.Http.Headers.HeaderEntry"/> array or a Dictionary&lt;<see cref="T:System.Net.Http.Headers.HeaderDescriptor"/>, <see cref="T:System.Object"/>&gt; </summary>
+        </member>
+        <member name="P:System.Net.Http.Headers.HttpHeaders.NonValidated">
+            <summary>Gets a view of the contents of this headers collection that does not parse nor validate the data upon access.</summary>
+        </member>
+        <member name="T:System.Net.Http.Headers.HttpHeadersNonValidated">
+            <summary>Provides a view on top of a <see cref="T:System.Net.Http.Headers.HttpHeaders"/> collection that avoids forcing validation or parsing on its contents.</summary>
+            <remarks>
+            The view surfaces data as it's stored in the headers collection.  Any header values that have not yet been parsed / validated won't be
+            as part of any accesses from this view, e.g. a raw header value of "one, two" that hasn't yet been parsed due to other operations
+            on the <see cref="T:System.Net.Http.Headers.HttpHeaders"/> will be surfaced as a single header value rather than two.  For any header values that have already
+            been parsed and validated, that value will be converted to a string to be returned from operations on this view.
+            </remarks>
+        </member>
+        <member name="F:System.Net.Http.Headers.HttpHeadersNonValidated._headers">
+            <summary>The wrapped headers collection.</summary>
+        </member>
+        <member name="M:System.Net.Http.Headers.HttpHeadersNonValidated.#ctor(System.Net.Http.Headers.HttpHeaders)">
+            <summary>Initializes the view.</summary>
+            <param name="headers">The wrapped headers collection.</param>
+        </member>
+        <member name="P:System.Net.Http.Headers.HttpHeadersNonValidated.Count">
+            <summary>Gets the number of headers stored in the collection.</summary>
+            <remarks>Multiple header values associated with the same header name are considered to be one header as far as this count is concerned.</remarks>
+        </member>
+        <member name="M:System.Net.Http.Headers.HttpHeadersNonValidated.Contains(System.String)">
+            <summary>Gets whether the collection contains the specified header.</summary>
+            <param name="headerName">The name of the header.</param>
+            <returns>true if the collection contains the header; otherwise, false.</returns>
+        </member>
+        <member name="P:System.Net.Http.Headers.HttpHeadersNonValidated.Item(System.String)">
+            <summary>Gets the values for the specified header name.</summary>
+            <param name="headerName">The name of the header.</param>
+            <returns>The values for the specified header.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">The header was not contained in the collection.</exception>
+        </member>
+        <member name="M:System.Net.Http.Headers.HttpHeadersNonValidated.System#Collections#Generic#IReadOnlyDictionary{System#String,System#Net#Http#Headers#HeaderStringValues}#ContainsKey(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:System.Net.Http.Headers.HttpHeadersNonValidated.TryGetValues(System.String,System.Net.Http.Headers.HeaderStringValues@)">
+            <summary>Attempts to retrieve the values associated with the specified header name.</summary>
+            <param name="headerName">The name of the header.</param>
+            <param name="values">The retrieved header values.</param>
+            <returns>true if the collection contains the specified header; otherwise, false.</returns>
+        </member>
+        <member name="M:System.Net.Http.Headers.HttpHeadersNonValidated.System#Collections#Generic#IReadOnlyDictionary{System#String,System#Net#Http#Headers#HeaderStringValues}#TryGetValue(System.String,System.Net.Http.Headers.HeaderStringValues@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:System.Net.Http.Headers.HttpHeadersNonValidated.GetEnumerator">
+            <summary>Gets an enumerator that iterates through the <see cref="T:System.Net.Http.Headers.HttpHeadersNonValidated"/>.</summary>
+            <returns>An enumerator that iterates through the <see cref="T:System.Net.Http.Headers.HttpHeadersNonValidated"/>.</returns>
+        </member>
+        <member name="M:System.Net.Http.Headers.HttpHeadersNonValidated.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{System#String,System#Net#Http#Headers#HeaderStringValues}}#GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:System.Net.Http.Headers.HttpHeadersNonValidated.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="P:System.Net.Http.Headers.HttpHeadersNonValidated.System#Collections#Generic#IReadOnlyDictionary{System#String,System#Net#Http#Headers#HeaderStringValues}#Keys">
+            <inheritdoc/>
+        </member>
+        <member name="P:System.Net.Http.Headers.HttpHeadersNonValidated.System#Collections#Generic#IReadOnlyDictionary{System#String,System#Net#Http#Headers#HeaderStringValues}#Values">
+            <inheritdoc/>
+        </member>
+        <member name="T:System.Net.Http.Headers.HttpHeadersNonValidated.Enumerator">
+            <summary>Enumerates the elements of a <see cref="T:System.Net.Http.Headers.HttpHeadersNonValidated"/>.</summary>
+        </member>
+        <member name="M:System.Net.Http.Headers.HttpHeadersNonValidated.Enumerator.#ctor(System.Net.Http.Headers.HeaderEntry[])">
+            <summary>Initializes the enumerator.</summary>
+            <param name="entries">The underlying header entries.</param>
+        </member>
+        <member name="M:System.Net.Http.Headers.HttpHeadersNonValidated.Enumerator.MoveNext">
+            <inheritdoc/>
+        </member>
+        <member name="P:System.Net.Http.Headers.HttpHeadersNonValidated.Enumerator.Current">
+            <inheritdoc/>
+        </member>
+        <member name="P:System.Net.Http.Headers.HttpHeadersNonValidated.Enumerator.System#Collections#IEnumerator#Current">
+            <inheritdoc/>
+        </member>
+        <member name="M:System.Net.Http.Headers.HttpHeadersNonValidated.Enumerator.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:System.Net.Http.Headers.HttpHeadersNonValidated.Enumerator.System#Collections#IEnumerator#Reset">
+            <inheritdoc/>
+        </member>
+        <member name="T:System.Net.Http.Headers.ObjectCollection`1">
+            <summary>An <see cref="T:System.Collections.Generic.ICollection`1"/> list that prohibits null elements and that is optimized for a small number of elements.</summary>
+        </member>
+        <member name="F:System.Net.Http.Headers.ObjectCollection`1._items">
+            <summary>null, a T, or a T[].</summary>
+        </member>
+        <member name="F:System.Net.Http.Headers.ObjectCollection`1._size">
+            <summary>Number of elements stored in the collection.</summary>
+        </member>
+        <member name="T:System.Net.Http.Headers.AltSvcHeaderParser">
+            <summary>
+            Parses Alt-Svc header values, per RFC 7838 Section 3.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.Headers.AltSvcHeaderParser.TryReadAlpnHexDigit(System.Char,System.Int32@)">
+            <summary>
+            Reads a hex nibble. Specialized for ALPN protocol names as they explicitly can not contain lower-case hex.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.Headers.AltSvcHeaderValue">
+            <remarks>
+            Kept internal for now:
+            A user depending on this strongly-typed header is dubious, as Alt-Svc values can also be received via the ALTSVC frame in HTTP/2.
+            This type does not conform to the typical API for header values, and should be updated if ever made public.
+            </remarks>
+        </member>
+        <member name="P:System.Net.Http.Headers.AltSvcHeaderValue.Host">
+            <summary>
+            The name of the host serving this alternate service.
+            If null, the alternate service is on the same host this header was received from.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.Headers.AltSvcHeaderValue.MaxAge">
+            <summary>
+            The time span this alternate service is valid for.
+            If not specified by the header, defaults to 24 hours.
+            </summary>
+            <remarks>TODO: if made public, should this be defaulted or nullable?</remarks>
+        </member>
+        <member name="P:System.Net.Http.Headers.AltSvcHeaderValue.Persist">
+            <summary>
+            If true, the service should persist across network changes.
+            Otherwise, the service should be invalidated if a network change is detected.
+            </summary>
+            <remarks>TODO: if made public, this should be made internal as Persist is left open-ended and can be non-boolean in the future.</remarks>
+        </member>
+        <member name="P:System.Net.Http.HttpClient.DefaultVersionPolicy">
+            <summary>
+            Gets or sets the default value of <see cref="P:System.Net.Http.HttpRequestMessage.VersionPolicy" /> for implicitly created requests in convenience methods,
+            e.g.: <see cref="M:System.Net.Http.HttpClient.GetAsync(System.String)" />, <see cref="M:System.Net.Http.HttpClient.PostAsync(System.String,System.Net.Http.HttpContent)" />.
+            </summary>
+            <remarks>
+            Note that this property has no effect on any of the <see cref="M:System.Net.Http.HttpClient.Send(System.Net.Http.HttpRequestMessage)" /> and <see cref="M:System.Net.Http.HttpClient.SendAsync(System.Net.Http.HttpRequestMessage)" /> overloads
+            since they accept fully initialized <see cref="T:System.Net.Http.HttpRequestMessage" />.
+            </remarks>
+        </member>
+        <member name="M:System.Net.Http.HttpContent.CreateContentReadStream(System.Threading.CancellationToken)">
+            <summary>
+            Serializes the HTTP content to a memory stream.
+            </summary>
+            <param name="cancellationToken">The cancellation token to cancel the operation.</param>
+            <returns>The output memory stream which contains the serialized HTTP content.</returns>
+            <remarks>
+            Once the operation completes, the returned memory stream represents the HTTP content. The returned stream can then be used to read the content using various stream APIs.
+            The <see cref="M:System.Net.Http.HttpContent.CreateContentReadStream(System.Threading.CancellationToken)"/> method buffers the content to a memory stream.
+            Derived classes can override this behavior if there is a better way to retrieve the content as stream.
+            For example, a byte array or a string could use a more efficient method way such as wrapping a read-only MemoryStream around the bytes or string.
+            </remarks>
+        </member>
+        <member name="M:System.Net.Http.HttpMethod.Normalize(System.Net.Http.HttpMethod)">
+            <summary>
+            Returns a singleton method instance with a capitalized method name for the supplied method
+            if it's known; otherwise, returns the original.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpRequestException.#ctor(System.String,System.Exception,System.Nullable{System.Net.HttpStatusCode})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Net.Http.HttpRequestException" /> class with a specific message that describes the current exception, an inner exception, and an HTTP status code.
+            </summary>
+            <param name="message">A message that describes the current exception.</param>
+            <param name="inner">The inner exception.</param>
+            <param name="statusCode">The HTTP status code.</param>
+        </member>
+        <member name="P:System.Net.Http.HttpRequestException.StatusCode">
+            <summary>
+            Gets the HTTP status code to be returned with the exception.
+            </summary>
+            <value>
+            An HTTP status code if the exception represents a non-successful result, otherwise <c>null</c>.
+            </value>
+        </member>
+        <member name="P:System.Net.Http.HttpRequestMessage.VersionPolicy">
+            <summary>
+            Gets or sets the policy determining how <see cref="P:System.Net.Http.HttpRequestMessage.Version" /> is interpreted and how is the final HTTP version negotiated with the server.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.HttpRequestMessage.Options">
+            <summary>
+            Gets the collection of options to configure the HTTP request.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.HttpRequestOptions">
+            <summary>
+            Represents a collection of options for an HTTP request.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpRequestOptions.#ctor">
+            <summary>
+            Initializes a new instance of the HttpRequestOptions class.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpRequestOptions.TryGetValue``1(System.Net.Http.HttpRequestOptionsKey{``0},``0@)">
+            <summary>
+            Gets the value of a given HTTP request option.
+            </summary>
+            <param name="key">Strongly typed key to get the value of HTTP request option. For example <code>new HttpRequestOptionsKey&lt;bool&gt;("WebAssemblyEnableStreamingResponse")</code></param>
+            <param name="value">Returns the value of HTTP request option.</param>
+            <typeparam name="TValue">The type of the HTTP value as defined by <code>key</code> parameter.</typeparam>
+            <returns>True, if an option is retrieved.</returns>
+        </member>
+        <member name="M:System.Net.Http.HttpRequestOptions.Set``1(System.Net.Http.HttpRequestOptionsKey{``0},``0)">
+            <summary>
+            Sets the value of a given request option.
+            </summary>
+            <param name="key">Strongly typed key to get the value of HTTP request option. For example <code>new HttpRequestOptionsKey&lt;bool&gt;("WebAssemblyEnableStreamingResponse")</code></param>
+            <param name="value">The value of the HTTP request option.</param>
+            <typeparam name="TValue">The type of the HTTP value as defined by <code>key</code> parameter.</typeparam>
+        </member>
+        <member name="T:System.Net.Http.HttpRequestOptionsKey`1">
+            <summary>
+            Represents a key in the options for an HTTP request.
+            </summary>
+            <typeparam name="TValue">The type of the value of the option.</typeparam>
+        </member>
+        <member name="P:System.Net.Http.HttpRequestOptionsKey`1.Key">
+            <summary>
+            Gets the name of the option.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpRequestOptionsKey`1.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the HttpRequestOptionsKey using the supplied key name.
+            </summary>
+            <param name="key">Name of the HTTP request option.</param>
+        </member>
+        <member name="M:System.Net.Http.HttpResponseMessage.StoreReceivedTrailingHeaders(System.Net.Http.Headers.HttpResponseHeaders)">
+            <summary>Stores the supplied trailing headers into this instance.</summary>
+            <remarks>
+            In the common/desired case where response.TrailingHeaders isn't accessed until after the whole payload has been
+            received, <see cref="F:System.Net.Http.HttpResponseMessage._trailingHeaders" /> will still be null, and we can simply store the supplied instance into
+            <see cref="F:System.Net.Http.HttpResponseMessage._trailingHeaders" /> and assume ownership of the instance.  In the uncommon case where it was accessed,
+            we add all of the headers to the existing instance.
+            </remarks>
+        </member>
+        <member name="T:System.Net.Http.HttpVersionPolicy">
+            <summary>
+            Determines behavior when selecting and negotiating HTTP version for a request.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.HttpVersionPolicy.RequestVersionOrLower">
+            <summary>
+            Default behavior, either uses requested version or downgrades to a lower one.
+            </summary>
+            <remarks>
+            If the server supports the requested version, either negotiated via ALPN (H2) or advertised via Alt-Svc (H3),
+            as well as a secure connection is being requested, the result is the <see cref="P:System.Net.Http.HttpRequestMessage.Version" />.
+            Otherwise, downgrades to HTTP/1.1.
+            Note that this option does not allow use of prenegotiated clear text connection, e.g. H2C.
+            </remarks>
+        </member>
+        <member name="F:System.Net.Http.HttpVersionPolicy.RequestVersionOrHigher">
+            <summary>
+            Tries to uses highest available version, downgrading only to the requested version, not bellow.
+            Throwing <see cref="T:System.Net.Http.HttpRequestException" /> if a connection with higher or equal version cannot be established.
+            </summary>
+            <remarks>
+            If the server supports higher than requested version, either negotiated via ALPN (H2) or advertised via Alt-Svc (H3),
+            as well as secure connection is being requested, the result is the highest available one.
+            Otherwise, downgrades to the <see cref="P:System.Net.Http.HttpRequestMessage.Version" />.
+            Note that this option allows to use prenegotiated clear text connection for the requested version but not for anything higher.
+            </remarks>
+        </member>
+        <member name="F:System.Net.Http.HttpVersionPolicy.RequestVersionExact">
+            <summary>
+            Uses only the requested version.
+            Throwing <see cref="T:System.Net.Http.HttpRequestException" /> if a connection with the exact version cannot be established.
+            </summary>
+            <remarks>
+            Note that this option allows to use prenegotiated clear text connection for the requested version.
+            </remarks>
+        </member>
+        <member name="P:System.Net.Http.MultipartContent.HeaderEncodingSelector">
+            <summary>
+            Gets or sets a callback that returns the <see cref="T:System.Text.Encoding"/> to decode the value for the specified response header name,
+            or <see langword="null"/> to use the default behavior.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.RequestRetryType">
+            <summary>
+            Used with <see cref="T:System.Net.Http.HttpRequestException"/> to indicate if a request is safe to retry.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.RequestRetryType.NoRetry">
+            <summary>
+            The request must not be retried; this indicates we aren't certain the server hasn't processed the request.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.RequestRetryType.RetryOnConnectionFailure">
+            <summary>
+            The request failed due to e.g. server shutting down (GOAWAY) and should be retried on a new connection.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.RequestRetryType.RetryOnLowerHttpVersion">
+            <summary>
+            The request failed on the current HTTP version, and the server requested it be retried on a lower version.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.RequestRetryType.RetryOnNextProxy">
+            <summary>
+            The proxy failed, so the request should be retried on the next proxy.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.RequestRetryType.RetryOnStreamLimitReached">
+            <summary>
+            The HTTP/2 connection reached the maximum number of streams and
+            another HTTP/2 connection must be created or found to serve the request.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.RuntimeSettingParser.QueryRuntimeSettingSwitch(System.String,System.String,System.Boolean)">
+            <summary>
+            Parse a <see cref="T:System.Boolean"/> value from an AppContext switch or an environment variable.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.RuntimeSettingParser.QueryRuntimeSettingSwitch(System.String,System.Boolean)">
+            <summary>
+            Parse a <see cref="T:System.Boolean"/> value from an AppContext switch.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.RuntimeSettingParser.ParseInt32EnvironmentVariableValue(System.String,System.Int32)">
+            <summary>
+            Parse an environment variable for an <see cref="T:System.Int32"/> value.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.RuntimeSettingParser.ParseDoubleEnvironmentVariableValue(System.String,System.Double)">
+            <summary>
+            Parse an environment variable for a <see cref="T:System.Double"/> value.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.StreamToStreamCopy">
+            <summary>
+            Helper class is used to copy the content of a source stream to a destination stream,
+            with optimizations based on expected usage within HttpClient and with the ability
+            to dispose of the source stream when the copy has completed.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.StreamToStreamCopy.Copy(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)">
+            <summary>Copies the source stream from its current position to the destination stream at its current position.</summary>
+            <param name="source">The source stream from which to copy.</param>
+            <param name="destination">The destination stream to which to copy.</param>
+            <param name="bufferSize">The size of the buffer to allocate if one needs to be allocated. If zero, use the default buffer size.</param>
+            <param name="disposeSource">Whether to dispose of the source stream after the copy has finished successfully.</param>
+        </member>
+        <member name="M:System.Net.Http.StreamToStreamCopy.CopyAsync(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean,System.Threading.CancellationToken)">
+            <summary>Copies the source stream from its current position to the destination stream at its current position.</summary>
+            <param name="source">The source stream from which to copy.</param>
+            <param name="destination">The destination stream to which to copy.</param>
+            <param name="bufferSize">The size of the buffer to allocate if one needs to be allocated. If zero, use the default buffer size.</param>
+            <param name="disposeSource">Whether to dispose of the source stream after the copy has finished successfully.</param>
+            <param name="cancellationToken">CancellationToken used to cancel the copy operation.</param>
+        </member>
+        <member name="M:System.Net.Http.StreamToStreamCopy.DisposeSource(System.IO.Stream)">
+            <summary>Disposes the source stream.</summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.HPackEncoder.EncodeIndexedHeaderField(System.Int32,System.Span{System.Byte},System.Int32@)">
+            <summary>Encodes an "Indexed Header Field".</summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.HPackEncoder.EncodeStatusHeader(System.Int32,System.Span{System.Byte},System.Int32@)">
+            <summary>Encodes the status code of a response to the :status field.</summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.HPackEncoder.EncodeLiteralHeaderFieldWithoutIndexing(System.Int32,System.String,System.Text.Encoding,System.Span{System.Byte},System.Int32@)">
+            <summary>Encodes a "Literal Header Field without Indexing".</summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.HPackEncoder.EncodeLiteralHeaderFieldNeverIndexing(System.Int32,System.String,System.Text.Encoding,System.Span{System.Byte},System.Int32@)">
+            <summary>Encodes a "Literal Header Field never Indexing".</summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.HPackEncoder.EncodeLiteralHeaderFieldIndexing(System.Int32,System.String,System.Text.Encoding,System.Span{System.Byte},System.Int32@)">
+            <summary>Encodes a "Literal Header Field with Indexing".</summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.HPackEncoder.EncodeLiteralHeaderFieldWithoutIndexing(System.Int32,System.Span{System.Byte},System.Int32@)">
+            <summary>
+            Encodes a "Literal Header Field without Indexing", but only the index portion;
+            a subsequent call to <c>EncodeStringLiteral</c> must be used to encode the associated value.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.HPackEncoder.EncodeLiteralHeaderFieldIndexingNewName(System.String,System.String,System.Text.Encoding,System.Span{System.Byte},System.Int32@)">
+            <summary>Encodes a "Literal Header Field with Indexing - New Name".</summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.HPackEncoder.EncodeLiteralHeaderFieldWithoutIndexingNewName(System.String,System.String,System.Text.Encoding,System.Span{System.Byte},System.Int32@)">
+            <summary>Encodes a "Literal Header Field without Indexing - New Name".</summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.HPackEncoder.EncodeLiteralHeaderFieldNeverIndexingNewName(System.String,System.String,System.Text.Encoding,System.Span{System.Byte},System.Int32@)">
+            <summary>Encodes a "Literal Header Field never Indexing - New Name".</summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.HPackEncoder.EncodeLiteralHeaderFieldWithoutIndexingNewName(System.String,System.ReadOnlySpan{System.String},System.String,System.Span{System.Byte},System.Int32@)">
+            <summary>Encodes a "Literal Header Field without Indexing - New Name".</summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.HPackEncoder.EncodeLiteralHeaderFieldWithoutIndexingNewName(System.String,System.Span{System.Byte},System.Int32@)">
+            <summary>
+            Encodes a "Literal Header Field without Indexing - New Name", but only the name portion;
+            a subsequent call to <c>EncodeStringLiteral</c> must be used to encode the associated value.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.HPackEncoder.EncodeLiteralHeaderFieldWithoutIndexingToAllocatedArray(System.Int32)">
+            <summary>
+            Encodes a "Literal Header Field without Indexing" to a new array, but only the index portion;
+            a subsequent call to <c>EncodeStringLiteral</c> must be used to encode the associated value.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.HPackEncoder.EncodeLiteralHeaderFieldWithoutIndexingNewNameToAllocatedArray(System.String)">
+            <summary>
+            Encodes a "Literal Header Field without Indexing - New Name" to a new array, but only the name portion;
+            a subsequent call to <c>EncodeStringLiteral</c> must be used to encode the associated value.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.HPackEncoder.EncodeLiteralHeaderFieldWithoutIndexingToAllocatedArray(System.Int32,System.String)">
+            <summary>Encodes a "Literal Header Field without Indexing" to a new array.</summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.Huffman.Decode(System.ReadOnlySpan{System.Byte},System.Byte[]@)">
+            <summary>
+            Decodes a Huffman encoded string from a byte array.
+            </summary>
+            <param name="src">The source byte array containing the encoded data.</param>
+            <param name="dstArray">The destination byte array to store the decoded data.  This may grow if its size is insufficient.</param>
+            <returns>The number of decoded symbols.</returns>
+        </member>
+        <member name="M:System.Net.Http.HPack.IntegerDecoder.BeginTryDecode(System.Byte,System.Int32,System.Int32@)">
+            <summary>
+            Decodes the first byte of the integer.
+            </summary>
+            <param name="b">
+            The first byte of the variable-length encoded integer.
+            </param>
+            <param name="prefixLength">
+            The number of lower bits in this prefix byte that the
+            integer has been encoded into. Must be between 1 and 8.
+            Upper bits must be zero.
+            </param>
+            <param name="result">
+            If decoded successfully, contains the decoded integer.
+            </param>
+            <returns>
+            If the integer has been fully decoded, true.
+            Otherwise, false -- <see cref="M:System.Net.Http.HPack.IntegerDecoder.TryDecode(System.Byte,System.Int32@)"/> must be called on subsequent bytes.
+            </returns>
+            <remarks>
+            The term "prefix" can be confusing. From the HPACK spec:
+            An integer is represented in two parts: a prefix that fills the current octet and an
+            optional list of octets that are used if the integer value does not fit within the prefix.
+            </remarks>
+        </member>
+        <member name="M:System.Net.Http.HPack.IntegerDecoder.TryDecode(System.Byte,System.Int32@)">
+            <summary>
+            Decodes subsequent bytes of an integer.
+            </summary>
+            <param name="b">The next byte.</param>
+            <param name="result">
+            If decoded successfully, contains the decoded integer.
+            </param>
+            <returns>If the integer has been fully decoded, true. Otherwise, false -- <see cref="M:System.Net.Http.HPack.IntegerDecoder.TryDecode(System.Byte,System.Int32@)"/> must be called on subsequent bytes.</returns>
+        </member>
+        <member name="F:System.Net.Http.HPack.IntegerEncoder.MaxInt32EncodedLength">
+            <summary>
+            The maximum bytes required to encode a 32-bit int, regardless of prefix length.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HPack.IntegerEncoder.Encode(System.Int32,System.Int32,System.Span{System.Byte},System.Int32@)">
+            <summary>
+            Encodes an integer into one or more bytes.
+            </summary>
+            <param name="value">The value to encode. Must not be negative.</param>
+            <param name="numBits">The length of the prefix, in bits, to encode <paramref name="value"/> within. Must be between 1 and 8.</param>
+            <param name="destination">The destination span to encode <paramref name="value"/> to.</param>
+            <param name="bytesWritten">The number of bytes used to encode <paramref name="value"/>.</param>
+            <returns>If <paramref name="destination"/> had enough storage to encode <paramref name="value"/>, true. Otherwise, false.</returns>
+        </member>
+        <member name="M:System.Net.Http.QPack.QPackDecoder.Reset">
+            <summary>
+            Reset the decoder state back to its initial value. Resetting state is required when reusing a decoder with multiple
+            header frames. For example, decoding a response's headers and trailers.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.QPack.QPackEncoder.EncodeLiteralHeaderFieldWithStaticNameReferenceToArray(System.Int32)">
+            <summary>
+            Encodes just the name part of a Literal Header Field With Static Name Reference. Must call <see cref="M:System.Net.Http.QPack.QPackEncoder.EncodeValueString(System.String,System.Text.Encoding,System.Span{System.Byte},System.Int32@)"/> after to encode the header's value.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.QPack.QPackEncoder.EncodeLiteralHeaderFieldWithoutNameReference(System.String,System.ReadOnlySpan{System.String},System.String,System.Span{System.Byte},System.Int32@)">
+            <summary>
+            Encodes a Literal Header Field Without Name Reference, building the value by concatenating a collection of strings with separators.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.QPack.QPackEncoder.EncodeLiteralHeaderFieldWithoutNameReferenceToArray(System.String)">
+            <summary>
+            Encodes just the value part of a Literawl Header Field Without Static Name Reference. Must call <see cref="M:System.Net.Http.QPack.QPackEncoder.EncodeValueString(System.String,System.Text.Encoding,System.Span{System.Byte},System.Int32@)"/> after to encode the header's value.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.QPack.QPackEncoder.EncodeValueString(System.ReadOnlySpan{System.String},System.String,System.Span{System.Byte},System.Int32@)">
+            <summary>
+            Encodes a value by concatenating a collection of strings, separated by a separator string.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.HttpHandlerDefaults">
+            <summary>
+            Additional default values used used only in this assembly.
+            </summary>
+            <summary>
+            Central repository for default values used in http handler settings.  Not all settings are relevant
+            to or configurable by all handlers.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnection.ChunkedEncodingReadStream.MaxChunkBytesAllowed">
+            <summary>How long a chunk indicator is allowed to be.</summary>
+            <remarks>
+            While most chunks indicators will contain no more than ulong.MaxValue.ToString("X").Length characters,
+            "chunk extensions" are allowed. We place a limit on how long a line can be to avoid OOM issues if an
+            infinite chunk length is sent.  This value is arbitrary and can be changed as needed.
+            </remarks>
+        </member>
+        <member name="F:System.Net.Http.HttpConnection.ChunkedEncodingReadStream.MaxTrailingHeaderLength">
+            <summary>How long a trailing header can be.  This value is arbitrary and can be changed as needed.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnection.ChunkedEncodingReadStream._chunkBytesRemaining">
+            <summary>The number of bytes remaining in the chunk.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnection.ChunkedEncodingReadStream._state">
+            <summary>The current state of the parsing state machine for the chunked response.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnection.InitialReadBufferSize">
+            <summary>Default size of the read buffer used for the connection.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnection.InitialWriteBufferSize">
+            <summary>Default size of the write buffer used for the connection.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnection.Expect100ErrorSendThreshold">
+            <summary>
+            Size after which we'll close the connection rather than send the payload in response
+            to final error status code sent by the server when using Expect: 100-continue.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnection._headerValues">
+            <summary>Reusable array used to get the values for each header being written to the wire.</summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnection.PrepareForReuse(System.Boolean)">
+            <summary>Prepare an idle connection to be used for a new request.</summary>
+            <param name="async">Indicates whether the coming request will be sync or async.</param>
+            <returns>True if connection can be used, false if it is invalid due to receiving EOF or unexpected data.</returns>
+        </member>
+        <member name="M:System.Net.Http.HttpConnection.CheckUsabilityOnScavenge">
+            <summary>Check whether a currently idle connection is still usable, or should be scavenged.</summary>
+            <returns>True if connection can be used, false if it is invalid due to receiving EOF or unexpected data.</returns>
+        </member>
+        <member name="M:System.Net.Http.HttpConnection.DetachFromPool">
+            <summary>
+            Detach the connection from the pool, so it is no longer counted against the connection limit.
+            This is used when we are creating a replacement connection for NT auth challenges.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.ConnectHelper.CertificateCallbackMapper">
+            <summary>
+            Helper type used by HttpClientHandler when wrapping SocketsHttpHandler to map its
+            certificate validation callback to the one used by SslStream.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.CreditManager._waitersTail">
+            <summary>Circular singly-linked list of active waiters.</summary>
+            <remarks>If null, the list is empty.  If non-null, this is the tail.  If the list has one item, its Next is itself.</remarks>
+        </member>
+        <member name="T:System.Net.Http.CreditWaiter">
+            <summary>Represents a waiter for credit.</summary>
+        </member>
+        <member name="F:System.Net.Http.CreditWaiter._cancellationToken">
+            <summary>Cancellation token for the current wait operation.</summary>
+        </member>
+        <member name="F:System.Net.Http.CreditWaiter._registration">
+            <summary>Cancellation registration for the current wait operation.</summary>
+        </member>
+        <member name="F:System.Net.Http.CreditWaiter._source">
+            <summary><see cref="T:System.Threading.Tasks.Sources.IValueTaskSource"/> implementation.</summary>
+        </member>
+        <member name="F:System.Net.Http.CreditWaiter.Amount">
+            <summary>Amount of credit desired by this waiter.</summary>
+        </member>
+        <member name="F:System.Net.Http.CreditWaiter.Next">
+            <summary>Next waiter in a list of waiters.</summary>
+        </member>
+        <member name="M:System.Net.Http.CreditWaiter.#ctor(System.Threading.CancellationToken)">
+            <summary>Initializes a waiter for a credit wait operation.</summary>
+            <param name="cancellationToken">The cancellation token for this wait operation.</param>
+        </member>
+        <member name="M:System.Net.Http.CreditWaiter.ResetForAwait(System.Threading.CancellationToken)">
+            <summary>Re-initializes a waiter for a credit wait operation.</summary>
+            <param name="cancellationToken">The cancellation token for this wait operation.</param>
+        </member>
+        <member name="M:System.Net.Http.CreditWaiter.RegisterCancellation(System.Threading.CancellationToken)">
+            <summary>Registers with the cancellation token to transition the source to a canceled state.</summary>
+            <param name="cancellationToken">The cancellation token with which to register.</param>
+        </member>
+        <member name="M:System.Net.Http.CreditWaiter.AsValueTask">
+            <summary>Wraps the instance as a <see cref="T:System.Threading.Tasks.ValueTask`1"/> to make it awaitable.</summary>
+        </member>
+        <member name="M:System.Net.Http.CreditWaiter.TrySetResult(System.Int32)">
+            <summary>Completes the instance with the specified result.</summary>
+            <param name="result">The result value.</param>
+            <returns>true if the instance was successfully completed; false if it was or is being canceled.</returns>
+        </member>
+        <member name="M:System.Net.Http.CreditWaiter.Dispose">
+            <summary>Disposes the instance, failing any outstanding wait.</summary>
+        </member>
+        <member name="M:System.Net.Http.CreditWaiter.UnregisterAndOwnCompletion">
+            <summary>Unregisters the cancellation callback.</summary>
+            <returns>true if the non-cancellation caller has the right to complete the instance; false if the instance was or is being completed by cancellation.</returns>
+        </member>
+        <member name="T:System.Net.Http.DecompressionHandler.DeflateDecompressedContent.ZLibOrDeflateStream">
+            <summary>Stream that wraps either <see cref="T:System.IO.Compression.ZLibStream"/> or <see cref="T:System.IO.Compression.DeflateStream"/> for decompression.</summary>
+        </member>
+        <member name="T:System.Net.Http.FailedProxyCache">
+            <summary>
+            Holds a cache of failing proxies and manages when they should be retried.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.FailedProxyCache.Immediate">
+            <summary>
+            When returned by <see cref="M:System.Net.Http.FailedProxyCache.GetProxyRenewTicks(System.Uri)"/>, indicates a proxy is immediately usable.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.FailedProxyCache.GetProxyRenewTicks(System.Uri)">
+            <summary>
+            Checks when a proxy will become usable.
+            </summary>
+            <param name="uri">The <see cref="T:System.Uri"/> of the proxy to check.</param>
+            <returns>If the proxy can be used, <see cref="F:System.Net.Http.FailedProxyCache.Immediate"/>. Otherwise, the next <see cref="P:System.Environment.TickCount64"/> that it should be used.</returns>
+        </member>
+        <member name="M:System.Net.Http.FailedProxyCache.SetProxyFailed(System.Uri)">
+            <summary>
+            Sets a proxy as failed, to avoid trying it again for some time.
+            </summary>
+            <param name="uri">The URI of the proxy.</param>
+        </member>
+        <member name="M:System.Net.Http.FailedProxyCache.TryRenewProxy(System.Uri,System.Int64)">
+            <summary>
+            Renews a proxy prior to its period expiring. Used when all proxies are failed to renew the proxy closest to being renewed.
+            </summary>
+            <param name="uri">The <paramref name="uri"/> of the proxy to renew.</param>
+            <param name="renewTicks">The current renewal time for the proxy. If the value has changed from this, the proxy will not be renewed.</param>
+        </member>
+        <member name="M:System.Net.Http.FailedProxyCache.Cleanup">
+            <summary>
+            Cleans up any old proxies that should no longer be marked as failing.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.FailedProxyCache.CleanupHelper">
+            <summary>
+            Cleans up any old proxies that should no longer be marked as failing.
+            </summary>
+            <remarks>
+            I expect this to never be called by <see cref="M:System.Net.Http.FailedProxyCache.Cleanup"/> in a production system. It is only needed in the case
+            that a system has a very large number of proxies that the PAC script cycles through. It is moderately expensive,
+            so it's only run periodically and is disabled until we exceed <see cref="F:System.Net.Http.FailedProxyCache.LargeProxyConfigBoundary"/> failed proxies.
+            </remarks>
+        </member>
+        <member name="F:System.Net.Http.Http2Connection.t_headerValues">
+            <summary>Reusable array used to get the values for each header being written to the wire.</summary>
+        </member>
+        <member name="T:System.Net.Http.Http2Connection.NopHeadersHandler">
+            <summary>Nop implementation of <see cref="T:System.Net.Http.IHttpStreamHeadersHandler"/> used by <see cref="M:System.Net.Http.Http2Connection.ProcessHeadersFrame(System.Net.Http.Http2Connection.FrameHeader)"/>.</summary>
+        </member>
+        <member name="M:System.Net.Http.Http2Connection.ProcessAltSvcFrame(System.Net.Http.Http2Connection.FrameHeader)">
+            <summary>
+            Parses an ALTSVC frame, defined by RFC 7838 Section 4.
+            </summary>
+            <remarks>
+            The RFC states that any parse errors should result in ignoring the frame.
+            </remarks>
+        </member>
+        <member name="M:System.Net.Http.Http2Connection.SendPingAsync(System.Int64,System.Boolean)">
+            <param name="pingContent">The 8-byte ping content to send, read as a big-endian integer.</param>
+            <param name="isAck">Determine whether the frame is ping or ping ack.</param>
+        </member>
+        <member name="M:System.Net.Http.Http2Connection.Abort(System.Exception)">
+            <summary>Abort all streams and cause further processing to fail.</summary>
+            <param name="abortException">Exception causing Abort to be called.</param>
+        </member>
+        <member name="F:System.Net.Http.Http2Connection.Http2Stream._trailers">
+            <summary>Stores any trailers received after returning the response content to the caller.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2Connection.Http2Stream._waitSource">
+             <summary>
+             The core logic for the IValueTaskSource implementation.
+            
+             Thread-safety:
+             _waitSource is used to coordinate between a producer indicating that something is available to process (either the connection's event loop
+             or a cancellation request) and a consumer doing that processing.  There must only ever be a single consumer, namely this stream reading
+             data associated with the response.  Because there is only ever at most one consumer, producers can trust that if _hasWaiter is true,
+             until the _waitSource is then set, no consumer will attempt to reset the _waitSource.  A producer must still take SyncObj in order to
+             coordinate with other producers (e.g. a race between data arriving from the event loop and cancellation being requested), but while holding
+             the lock it can check whether _hasWaiter is true, and if it is, set _hasWaiter to false, exit the lock, and then set the _waitSource. Another
+             producer coming along will then see _hasWaiter as false and will not attempt to concurrently set _waitSource (which would violate _waitSource's
+             thread-safety), and no other consumer could come along in the interim, because _hasWaiter being true means that a consumer is already waiting
+             for _waitSource to be set, and legally there can only be one consumer.  Once this producer sets _waitSource, the consumer could quickly loop
+             around to wait again, but invariants have all been maintained in the interim, and the consumer would need to take the SyncObj lock in order to
+             Reset _waitSource.
+             </summary>
+        </member>
+        <member name="F:System.Net.Http.Http2Connection.Http2Stream._waitSourceCancellation">
+            <summary>Cancellation registration used to cancel the <see cref="F:System.Net.Http.Http2Connection.Http2Stream._waitSource"/>.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2Connection.Http2Stream._hasWaiter">
+            <summary>
+            Whether code has requested or is about to request a wait be performed and thus requires a call to SetResult to complete it.
+            This is read and written while holding the lock so that most operations on _waitSource don't need to be.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.Http2ProtocolErrorCode">
+            <summary>
+            Error codes defined by the HTTP/2 protocol, used in RST_STREAM and GOAWAY frames to convey the reasons for the stream or connection error.
+            https://http2.github.io/http2-spec/#PROTOCOL_ERROR
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http2ProtocolErrorCode.NoError">
+            <summary>The associated condition is not a result of an error.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2ProtocolErrorCode.ProtocolError">
+            <summary>The endpoint detected an unspecific protocol error. This error is for use when a more specific error code is not available.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2ProtocolErrorCode.InternalError">
+            <summary>The endpoint encountered an unexpected internal error.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2ProtocolErrorCode.FlowControlError">
+            <summary>The endpoint detected that its peer violated the flow-control protocol.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2ProtocolErrorCode.SettingsTimeout">
+            <summary>The endpoint sent a SETTINGS frame but did not receive a response in a timely manner.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2ProtocolErrorCode.StreamClosed">
+            <summary>The endpoint received a frame after a stream was half-closed.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2ProtocolErrorCode.FrameSizeError">
+            <summary>The endpoint received a frame with an invalid size.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2ProtocolErrorCode.RefusedStream">
+            <summary>The endpoint refused the stream prior to performing any application processing.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2ProtocolErrorCode.Cancel">
+            <summary>Used by the endpoint to indicate that the stream is no longer needed.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2ProtocolErrorCode.CompressionError">
+            <summary>The endpoint is unable to maintain the header compression context for the connection.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2ProtocolErrorCode.ConnectError">
+            <summary>The connection established in response to a CONNECT request was reset or abnormally closed.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2ProtocolErrorCode.EnhanceYourCalm">
+            <summary>The endpoint detected that its peer is exhibiting a behavior that might be generating excessive load.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2ProtocolErrorCode.InadequateSecurity">
+            <summary>The underlying transport has properties that do not meet minimum security requirements.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http2ProtocolErrorCode.Http11Required">
+            <summary>The endpoint requires that HTTP/1.1 be used instead of HTTP/2.</summary>
+        </member>
+        <member name="P:System.Net.Http.Http3Connection.ShuttingDown">
+            <summary>
+            If true, we've received GOAWAY, are aborting due to a connection-level error, or are disposing due to pool limits.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.Http3Connection.Dispose">
+            <summary>
+            Starts shutting down the <see cref="T:System.Net.Http.Http3Connection"/>. Final cleanup will happen when there are no more active requests.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.Http3Connection.CheckForShutdown">
+            <summary>
+            Called when shutting down, this checks for when shutdown is complete (no more active requests) and does actual disposal.
+            </summary>
+            <remarks>Requires <see cref="P:System.Net.Http.Http3Connection.SyncObj"/> to be locked.</remarks>
+        </member>
+        <member name="M:System.Net.Http.Http3Connection.Abort(System.Exception)">
+            <summary>
+            Aborts the connection with an error.
+            </summary>
+            <remarks>
+            Used for e.g. I/O or connection-level frame parsing errors.
+            </remarks>
+        </member>
+        <member name="M:System.Net.Http.Http3Connection.AcceptStreamsAsync">
+            <summary>
+            Accepts unidirectional streams (control, QPack, ...) from the server.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.Http3Connection.ProcessServerStreamAsync(System.Net.Quic.QuicStream)">
+            <summary>
+            Routes a stream to an appropriate stream-type-specific processor
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.Http3Connection.ProcessServerControlStreamAsync(System.Net.Quic.QuicStream,System.Net.ArrayBuffer)">
+            <summary>
+            Reads the server's control stream.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3RequestStream._headerValues">
+            <summary>Reusable array used to get the values for each header being written to the wire.</summary>
+        </member>
+        <member name="F:System.Net.Http.Http3RequestStream._trailingHeaders">
+            <summary>Any trailing headers.</summary>
+        </member>
+        <member name="M:System.Net.Http.Http3RequestStream.ReadResponseAsync(System.Threading.CancellationToken)">
+            <summary>
+            Waits for the response headers to be read, and handles (Expect 100 etc.) informational statuses.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.Http3RequestStream.OnHeader(System.Nullable{System.Int32},System.Net.Http.Headers.HeaderDescriptor,System.String,System.ReadOnlySpan{System.Byte})">
+            <param name="staticIndex">The static index of the header, if any.</param>
+            <param name="descriptor">A descriptor for either a known header or unknown header.</param>
+            <param name="staticValue">The static indexed value, if any.</param>
+            <param name="literalValue">The literal ASCII value, if any.</param>
+            <remarks>One of <paramref name="staticValue"/> or <paramref name="literalValue"/> will be set.</remarks>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionBase._lastDateHeaderValue">
+            <summary>Cached string for the last Date header received on this connection.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionBase._lastServerHeaderValue">
+            <summary>Cached string for the last Server header received on this connection.</summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionBase.GetResponseHeaderValueWithCaching(System.Net.Http.Headers.HeaderDescriptor,System.ReadOnlySpan{System.Byte},System.Text.Encoding)">
+            <summary>Uses <see cref="M:System.Net.Http.Headers.HeaderDescriptor.GetHeaderValue(System.ReadOnlySpan{System.Byte},System.Text.Encoding)"/>, but first special-cases several known headers for which we can use caching.</summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionBase.CheckUsabilityOnScavenge">
+            <summary>Check whether a connection is still usable, or should be scavenged.</summary>
+            <returns>True if connection can be used.</returns>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionBase.IgnoreExceptions(System.Threading.Tasks.ValueTask{System.Int32})">
+            <summary>Awaits a task, ignoring any resulting exceptions.</summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionBase.LogExceptions(System.Threading.Tasks.Task)">
+            <summary>Awaits a task, logging any resulting exceptions (which are otherwise ignored).</summary>
+        </member>
+        <member name="T:System.Net.Http.HttpConnectionPool">
+            <summary>Provides a pool of connections to the same endpoint.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._originAuthority">
+            <summary>The origin authority used to construct the <see cref="T:System.Net.Http.HttpConnectionPool"/>.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._http3Authority">
+            <summary>Initially set to null, this can be set to enable HTTP/3 based on Alt-Svc.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._authorityExpireTimer">
+            <summary>A timer to expire <see cref="F:System.Net.Http.HttpConnectionPool._http3Authority"/> and return the pool to <see cref="F:System.Net.Http.HttpConnectionPool._originAuthority"/>. Initialized on first use.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._persistAuthority">
+            <summary>If true, the <see cref="F:System.Net.Http.HttpConnectionPool._http3Authority"/> will persist across a network change. If false, it will be reset to <see cref="F:System.Net.Http.HttpConnectionPool._originAuthority"/>.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._altSvcBlocklist">
+            <summary>
+            When an Alt-Svc authority fails due to 421 Misdirected Request, it is placed in the blocklist to be ignored
+            for <see cref="F:System.Net.Http.HttpConnectionPool.AltSvcBlocklistTimeoutInMilliseconds"/> milliseconds. Initialized on first use.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool.MaxConnectionFailureRetries">
+            <summary>The maximum number of times to retry a request after a failure on an established connection.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool.MaxAltSvcIgnoreListSize">
+            <summary>
+            If <see cref="F:System.Net.Http.HttpConnectionPool._altSvcBlocklist"/> exceeds this size, Alt-Svc will be disabled entirely for <see cref="F:System.Net.Http.HttpConnectionPool.AltSvcBlocklistTimeoutInMilliseconds"/> milliseconds.
+            This is to prevent a failing server from bloating the dictionary beyond a reasonable value.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool.AltSvcBlocklistTimeoutInMilliseconds">
+            <summary>The time, in milliseconds, that an authority should remain in <see cref="F:System.Net.Http.HttpConnectionPool._altSvcBlocklist"/>.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._availableHttp11Connections">
+            <summary>List of available HTTP/1.1 connections stored in the pool.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._maxHttp11Connections">
+            <summary>The maximum number of HTTP/1.1 connections allowed to be associated with the pool.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._associatedHttp11ConnectionCount">
+            <summary>The number of HTTP/1.1 connections associated with the pool, including in use, available, and pending.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._pendingHttp11ConnectionCount">
+            <summary>The number of HTTP/1.1 connections that are in the process of being established.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._http11RequestQueue">
+            <summary>Queue of requests waiting for an HTTP/1.1 connection.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._availableHttp2Connections">
+            <summary>List of available HTTP/2 connections stored in the pool.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._associatedHttp2ConnectionCount">
+            <summary>The number of HTTP/2 connections associated with the pool, including in use, available, and pending.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._pendingHttp2Connection">
+            <summary>Indicates whether an HTTP/2 connection is in the process of being established.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._http2RequestQueue">
+            <summary>Queue of requests waiting for an HTTP/2 connection.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._hostHeaderValueBytes">
+            <summary>For non-proxy connection pools, this is the host name in bytes; for proxies, null.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._sslOptionsHttp11">
+            <summary>Options specialized and cached for this pool and its key.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._usedSinceLastCleanup">
+            <summary>Whether the pool has been used since the last time a cleanup occurred.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPool._disposed">
+            <summary>Whether the pool has been disposed.</summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPool.#ctor(System.Net.Http.HttpConnectionPoolManager,System.Net.Http.HttpConnectionKind,System.String,System.Int32,System.String,System.Uri)">
+            <summary>Initializes the pool.</summary>
+            <param name="poolManager">The manager associated with this pool.</param>
+            <param name="kind">The kind of HTTP connections stored in this pool.</param>
+            <param name="host">The host with which this pool is associated.</param>
+            <param name="port">The port with which this pool is associated.</param>
+            <param name="sslHostName">The SSL host with which this pool is associated.</param>
+            <param name="proxyUri">The proxy this pool targets (optional).</param>
+        </member>
+        <member name="P:System.Net.Http.HttpConnectionPool.Http2AltSvcOriginUri">
+            <summary>
+            An ASCII origin string per RFC 6454 Section 6.2, in format &lt;scheme&gt;://&lt;host&gt;[:&lt;port&gt;]
+            </summary>
+            <remarks>
+            Used by <see cref="T:System.Net.Http.Http2Connection"/> to test ALTSVC frames for our origin.
+            </remarks>
+        </member>
+        <member name="P:System.Net.Http.HttpConnectionPool.SyncObj">
+            <summary>Object used to synchronize access to state in the pool.</summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPool.ProcessAltSvc(System.Net.Http.HttpResponseMessage)">
+            <summary>Check for the Alt-Svc header, to upgrade to HTTP/3.</summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPool.HandleAltSvc(System.Collections.Generic.IEnumerable{System.String},System.Nullable{System.TimeSpan})">
+            <summary>
+            Inspects a collection of Alt-Svc headers to find the first eligible upgrade path.
+            </summary>
+            <remarks>TODO: common case will likely be a single value. Optimize for that.</remarks>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPool.ExpireAltSvcAuthority">
+            <summary>
+            Expires the current Alt-Svc authority, resetting the connection back to origin.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPool.IsAltSvcBlocked(System.Net.Http.HttpAuthority)">
+            <summary>
+            Checks whether the given <paramref name="authority"/> is on the currext Alt-Svc blocklist.
+            </summary>
+            <seealso cref="M:System.Net.Http.HttpConnectionPool.BlocklistAuthority(System.Net.Http.HttpAuthority)" />
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPool.BlocklistAuthority(System.Net.Http.HttpAuthority)">
+             <summary>
+             Blocklists an authority and resets the current authority back to origin.
+             If the number of blocklisted authorities exceeds <see cref="F:System.Net.Http.HttpConnectionPool.MaxAltSvcIgnoreListSize"/>,
+             Alt-Svc will be disabled entirely for a period of time.
+             </summary>
+             <remarks>
+             This is called when we get a "421 Misdirected Request" from an alternate authority.
+             A future strategy would be to retry the individual request on an older protocol, we'd want to have
+             some logic to blocklist after some number of failures to avoid doubling our request latency.
+            
+             For now, the spec states alternate authorities should be able to handle ALL requests, so this
+             is treated as an exceptional error by immediately blocklisting the authority.
+             </remarks>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPool.InvalidateHttp11Connection(System.Net.Http.HttpConnection,System.Boolean)">
+            <summary>
+            Called when an HttpConnection from this pool is no longer usable.
+            Note, this is always called from HttpConnection.Dispose, which is a bit different than how HTTP2 works.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPool.InvalidateHttp2Connection(System.Net.Http.Http2Connection)">
+            <summary>
+            Called when an Http2Connection from this pool is no longer usable.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPool.DisableHttp2Connection(System.Net.Http.Http2Connection)">
+            <summary>
+            Disable usage of the specified connection because it cannot handle any more streams at the moment.
+            We will register to be notified when it can handle more streams (or becomes permanently unusable).
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPool.Dispose">
+            <summary>
+            Disposes the connection pool.  This is only needed when the pool currently contains
+            or has associated connections.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPool.CleanCacheAndDisposeIfUnused">
+            <summary>
+            Removes any unusable connections from the pool, and if the pool
+            is then empty and stale, disposes of it.
+            </summary>
+            <returns>
+            true if the pool disposes of itself; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPool.GetIsWindows7Or2008R2">
+            <summary>Gets whether we're running on Windows 7 or Windows 2008 R2.</summary>
+        </member>
+        <member name="T:System.Net.Http.HttpConnectionPoolManager">
+            <summary>Provides a set of connection pools, each for its own endpoint.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPoolManager._cleanPoolTimeout">
+            <summary>How frequently an operation should be initiated to clean out old pools and connections in those pools.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPoolManager._pools">
+            <summary>The pools, indexed by endpoint.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPoolManager._cleaningTimer">
+            <summary>Timer used to initiate cleaning of the pools.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPoolManager._heartBeatTimer">
+            <summary>Heart beat timer currently used for Http2 ping only.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpConnectionPoolManager._timerIsRunning">
+            <summary>
+            Keeps track of whether or not the cleanup timer is running. It helps us avoid the expensive
+            <see cref="P:System.Collections.Concurrent.ConcurrentDictionary`2.IsEmpty"/> call.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.HttpConnectionPoolManager.SyncObj">
+            <summary>Object used to synchronize access to state in the pool.</summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPoolManager.#ctor(System.Net.Http.HttpConnectionSettings)">
+            <summary>Initializes the pools.</summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPoolManager.StartMonitoringNetworkChanges">
+            <summary>
+            Starts monitoring for network changes. Upon a change, <see cref="M:System.Net.Http.HttpConnectionPool.OnNetworkChanged"/> will be
+            called for every <see cref="T:System.Net.Http.HttpConnectionPool"/> in the <see cref="T:System.Net.Http.HttpConnectionPoolManager"/>.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPoolManager.SendAsyncMultiProxy(System.Net.Http.HttpRequestMessage,System.Boolean,System.Boolean,System.Net.Http.MultiProxy,System.Uri,System.Threading.CancellationToken)">
+            <summary>
+            Iterates a request over a set of proxies until one works, or all proxies have failed.
+            </summary>
+            <param name="request">The request message.</param>
+            <param name="async">Whether to execute the request synchronously or asynchronously.</param>
+            <param name="doRequestAuth">Whether to perform request authentication.</param>
+            <param name="multiProxy">The set of proxies to use.</param>
+            <param name="firstProxy">The first proxy try.</param>
+            <param name="cancellationToken">The cancellation token to use for the operation.</param>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPoolManager.Dispose">
+            <summary>Disposes of the pools, disposing of each individual pool.</summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPoolManager.SetCleaningTimer(System.TimeSpan)">
+            <summary>Sets <see cref="F:System.Net.Http.HttpConnectionPoolManager._cleaningTimer"/> and <see cref="F:System.Net.Http.HttpConnectionPoolManager._timerIsRunning"/> based on the specified timeout.</summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionPoolManager.RemoveStalePools">
+            <summary>Removes unusable connections from each pool, and removes stale pools entirely.</summary>
+        </member>
+        <member name="T:System.Net.Http.HttpConnectionSettings">
+            <summary>Provides a state bag of settings for configuring HTTP connections.</summary>
+        </member>
+        <member name="M:System.Net.Http.HttpConnectionSettings.CloneAndNormalize">
+            <summary>Creates a copy of the settings but with some values normalized to suit the implementation.</summary>
+        </member>
+        <member name="F:System.Net.Http.HttpKeepAlivePingPolicy.WithActiveRequests">
+            <summary>
+            Sends keep alive ping for only when there are active streams on the connection.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.HttpKeepAlivePingPolicy.Always">
+            <summary>
+            Sends keep alive ping for whole connection lifetime.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.IMultiWebProxy">
+            <summary>
+            An <see cref="T:System.Net.IWebProxy"/> capable of returning more than one proxy for a single <see cref="T:System.Uri"/>.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.IMultiWebProxy.GetMultiProxy(System.Uri)">
+            <summary>
+            Gets the proxy URIs.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.MultiProxy">
+            <summary>
+            A collection of proxies.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.MultiProxy.Parse(System.Net.Http.FailedProxyCache,System.String,System.Boolean)">
+            <summary>
+            Parses a WinHTTP proxy config into a MultiProxy instance.
+            </summary>
+            <param name="failedProxyCache">The cache of failed proxy requests to employ.</param>
+            <param name="proxyConfig">The WinHTTP proxy config to parse.</param>
+            <param name="secure">If true, return proxies suitable for use with a secure connection. If false, return proxies suitable for an insecure connection.</param>
+        </member>
+        <member name="M:System.Net.Http.MultiProxy.CreateLazy(System.Net.Http.FailedProxyCache,System.String,System.Boolean)">
+            <summary>
+            Initializes a MultiProxy instance that lazily parses a given WinHTTP configuration string.
+            </summary>
+            <param name="failedProxyCache">The cache of failed proxy requests to employ.</param>
+            <param name="proxyConfig">The WinHTTP proxy config to parse.</param>
+            <param name="secure">If true, return proxies suitable for use with a secure connection. If false, return proxies suitable for an insecure connection.</param>
+        </member>
+        <member name="M:System.Net.Http.MultiProxy.ReadNext(System.Uri@,System.Boolean@)">
+            <summary>
+            Reads the next proxy URI from the MultiProxy.
+            </summary>
+            <param name="uri">The next proxy to use for the request.</param>
+            <param name="isFinalProxy">If true, indicates there are no further proxies to read from the config.</param>
+            <returns>If there is a proxy available, true. Otherwise, false.</returns>
+        </member>
+        <member name="M:System.Net.Http.MultiProxy.ReadNextHelper(System.Uri@,System.Boolean@)">
+            <summary>
+            Reads the next proxy URI from the MultiProxy, either via parsing a config string or from an array.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.MultiProxy.TryParseProxyConfigPart(System.ReadOnlySpan{System.Char},System.Boolean,System.Uri@,System.Int32@)">
+            <summary>
+            This method is used to parse WinINet Proxy strings, a single proxy at a time.
+            </summary>
+            <remarks>
+            The strings are a semicolon or whitespace separated list, with each entry in the following format:
+            ([&lt;scheme&gt;=][&lt;scheme&gt;"://"]&lt;server&gt;[":"&lt;port&gt;])
+            </remarks>
+        </member>
+        <member name="T:System.Net.Http.SocketsHttpConnectionContext">
+            <summary>
+            Represents the context passed to the ConnectCallback for a SocketsHttpHandler instance.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpConnectionContext.DnsEndPoint">
+            <summary>
+            The DnsEndPoint to be used by the ConnectCallback to establish the connection.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpConnectionContext.InitialRequestMessage">
+            <summary>
+            The initial HttpRequestMessage that is causing the connection to be created.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpHandler.IsSupported">
+            <summary>
+            Gets a value that indicates whether the handler is supported on the current platform.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpHandler.InitialHttp2StreamWindowSize">
+            <summary>
+            Defines the initial HTTP2 stream receive window size for all connections opened by the this <see cref="T:System.Net.Http.SocketsHttpHandler"/>.
+            </summary>
+            <remarks>
+            Larger the values may lead to faster download speed, but potentially higher memory footprint.
+            The property must be set to a value between 65535 and the configured maximum window size, which is 16777216 by default.
+            </remarks>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpHandler.KeepAlivePingDelay">
+            <summary>
+            Gets or sets the keep alive ping delay. The client will send a keep alive ping to the server if it
+            doesn't receive any frames on a connection for this period of time. This property is used together with
+            <see cref="P:System.Net.Http.SocketsHttpHandler.KeepAlivePingTimeout"/> to close broken connections.
+            <para>
+            Delay value must be greater than or equal to 1 second. Set to <see cref="F:System.Threading.Timeout.InfiniteTimeSpan"/> to
+            disable the keep alive ping.
+            Defaults to <see cref="F:System.Threading.Timeout.InfiniteTimeSpan"/>.
+            </para>
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpHandler.KeepAlivePingTimeout">
+            <summary>
+            Gets or sets the keep alive ping timeout. Keep alive pings are sent when a period of inactivity exceeds
+            the configured <see cref="P:System.Net.Http.SocketsHttpHandler.KeepAlivePingDelay"/> value. The client will close the connection if it
+            doesn't receive any frames within the timeout.
+            <para>
+            Timeout must be greater than or equal to 1 second. Set to <see cref="F:System.Threading.Timeout.InfiniteTimeSpan"/> to
+            disable the keep alive ping timeout.
+            Defaults to 20 seconds.
+            </para>
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpHandler.KeepAlivePingPolicy">
+            <summary>
+            Gets or sets the keep alive ping behaviour. Keep alive pings are sent when a period of inactivity exceeds
+            the configured <see cref="P:System.Net.Http.SocketsHttpHandler.KeepAlivePingDelay"/> value.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpHandler.EnableMultipleHttp2Connections">
+            <summary>
+            Gets or sets a value that indicates whether additional HTTP/2 connections can be established to the same server
+            when the maximum of concurrent streams is reached on all existing connections.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpHandler.ConnectCallback">
+            <summary>
+            When non-null, a custom callback used to open new connections.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpHandler.PlaintextStreamFilter">
+            <summary>
+            Gets or sets a custom callback that provides access to the plaintext HTTP protocol stream.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpHandler.Properties">
+            <summary>
+            Gets a writable dictionary (that is, a map) of custom properties for the HttpClient requests. The dictionary is initialized empty; you can insert and query key-value pairs for your custom handlers and special processing.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpHandler.RequestHeaderEncodingSelector">
+            <summary>
+            Gets or sets a callback that returns the <see cref="T:System.Text.Encoding"/> to encode the value for the specified request header name,
+            or <see langword="null"/> to use the default behavior.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpHandler.ResponseHeaderEncodingSelector">
+            <summary>
+            Gets or sets a callback that returns the <see cref="T:System.Text.Encoding"/> to decode the value for the specified response header name,
+            or <see langword="null"/> to use the default behavior.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpHandler.ActivityHeadersPropagator">
+            <summary>
+            Gets or sets the <see cref="T:System.Diagnostics.DistributedContextPropagator"/> to use when propagating the distributed trace and context.
+            Use <see langword="null"/> to disable propagation.
+            Defaults to <see cref="P:System.Diagnostics.DistributedContextPropagator.Current"/>.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3SettingType.QPackMaxTableCapacity">
+            <summary>
+            SETTINGS_QPACK_MAX_TABLE_CAPACITY
+            The maximum dynamic table size. The default is 0.
+            https://tools.ietf.org/html/draft-ietf-quic-qpack-11#section-5
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3SettingType.MaxHeaderListSize">
+            <summary>
+            SETTINGS_MAX_HEADER_LIST_SIZE
+            The maximum size of headers. The default is unlimited.
+            https://tools.ietf.org/html/draft-ietf-quic-http-24#section-7.2.4.1
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3SettingType.QPackBlockedStreams">
+            <summary>
+            SETTINGS_QPACK_BLOCKED_STREAMS
+            The maximum number of request streams that can be blocked waiting for QPack instructions. The default is 0.
+            https://tools.ietf.org/html/draft-ietf-quic-qpack-11#section-5
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.Http3StreamType">
+            <summary>
+            Unidirectional stream types.
+            </summary>
+            <remarks>
+            Bidirectional streams are always a request stream.
+            </remarks>
+        </member>
+        <member name="F:System.Net.Http.Http3StreamType.Control">
+            <summary>
+            https://tools.ietf.org/html/draft-ietf-quic-http-24#section-6.2.1
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3StreamType.Push">
+            <summary>
+            https://tools.ietf.org/html/draft-ietf-quic-http-24#section-6.2.2
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3StreamType.QPackEncoder">
+            <summary>
+            https://tools.ietf.org/html/draft-ietf-quic-qpack-11#section-4.2
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3StreamType.QPackDecoder">
+            <summary>
+            https://tools.ietf.org/html/draft-ietf-quic-qpack-11#section-4.2
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.VariableLengthIntegerHelper">
+            <summary>
+            Variable length integer encoding and decoding methods. Based on https://tools.ietf.org/html/draft-ietf-quic-transport-24#section-16.
+            A variable-length integer can use 1, 2, 4, or 8 bytes.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.NoError">
+            <summary>
+            H3_NO_ERROR (0x100):
+            No error. This is used when the connection or stream needs to be closed, but there is no error to signal.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.ProtocolError">
+            <summary>
+            H3_GENERAL_PROTOCOL_ERROR (0x101):
+            Peer violated protocol requirements in a way which doesn't match a more specific error code,
+            or endpoint declines to use the more specific error code.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.InternalError">
+            <summary>
+            H3_INTERNAL_ERROR (0x102):
+            An internal error has occurred in the HTTP stack.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.StreamCreationError">
+            <summary>
+             H3_STREAM_CREATION_ERROR (0x103):
+            The endpoint detected that its peer created a stream that it will not accept.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.ClosedCriticalStream">
+            <summary>
+            H3_CLOSED_CRITICAL_STREAM (0x104):
+            A stream required by the connection was closed or reset.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.UnexpectedFrame">
+            <summary>
+            H3_FRAME_UNEXPECTED (0x105):
+            A frame was received which was not permitted in the current state.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.FrameError">
+            <summary>
+            H3_FRAME_ERROR (0x106):
+            A frame that fails to satisfy layout requirements or with an invalid size was received.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.ExcessiveLoad">
+            <summary>
+            H3_EXCESSIVE_LOAD (0x107):
+            The endpoint detected that its peer is exhibiting a behavior that might be generating excessive load.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.IdError">
+            <summary>
+            H3_ID_ERROR (0x109):
+            A Stream ID, Push ID, or Placeholder ID was used incorrectly, such as exceeding a limit, reducing a limit, or being reused.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.SettingsError">
+            <summary>
+            H3_SETTINGS_ERROR (0x109):
+            An endpoint detected an error in the payload of a SETTINGS frame.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.MissingSettings">
+            <summary>
+            H3_MISSING_SETTINGS (0x10A):
+            No SETTINGS frame was received at the beginning of the control stream.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.RequestRejected">
+            <summary>
+            H3_REQUEST_REJECTED (0x10B):
+            A server rejected a request without performing any application processing.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.RequestCancelled">
+            <summary>
+            H3_REQUEST_CANCELLED (0x10C):
+            The request or its response (including pushed response) is cancelled.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.RequestIncomplete">
+            <summary>
+            H3_REQUEST_INCOMPLETE (0x10D):
+            The client's stream terminated without containing a fully-formed request.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.MessageError">
+            <summary>
+            H3_MESSAGE_ERROR (0x10E):
+            An HTTP message was malformed and cannot be processed.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.ConnectError">
+            <summary>
+            H3_CONNECT_ERROR (0x10F):
+            The connection established in response to a CONNECT request was reset or abnormally closed.
+            </summary>
+        </member>
+        <member name="F:System.Net.Http.Http3ErrorCode.VersionFallback">
+            <summary>
+            H3_VERSION_FALLBACK (0x110):
+            The requested operation cannot be served over HTTP/3. The peer should retry over HTTP/1.1.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.Http3Frame.TryReadIntegerPair(System.ReadOnlySpan{System.Byte},System.Int64@,System.Int64@,System.Int32@)">
+            <summary>
+            Reads two variable-length integers.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.Http3FrameType">
+            <summary>
+            HTTP3 frame types.
+            </summary>
+            <remarks>
+            For frames that existed in HTTP/2, but either no longer exist or were delegated to QUIC, 7.2.8 states:
+                "Frame types that were used in HTTP/2 where there is no corresponding HTTP/3 frame have also been
+                reserved (Section 11.2.1). These frame types MUST NOT be sent, and their receipt MUST be treated
+                as a connection error of type H3_FRAME_UNEXPECTED."
+            </remarks>
+        </member>
+        <member name="M:System.Net.Http.HttpEnvironmentProxyCredentials.GetCredentialsFromString(System.String)">
+            <summary>
+            Converts string containing user:password to NetworkCredential object
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpEnvironmentProxy.GetUriFromString(System.String)">
+            <summary>
+            This function will evaluate given string and it will try to convert
+            it to Uri object. The string could contain URI fragment, IP address and  port
+            tuple or just IP address or name. It will return null if parsing fails.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpEnvironmentProxy.IsMatchInBypassList(System.Uri)">
+            <summary>
+            This function returns true if given Host match bypass list.
+            Note, that the list is common for http and https.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpEnvironmentProxy.GetProxy(System.Uri)">
+            <summary>
+            Gets the proxy URI. (iWebProxy interface)
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpEnvironmentProxy.IsBypassed(System.Uri)">
+            <summary>
+            Checks if URI is subject to proxy or not.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpWindowsProxy.GetProxy(System.Uri)">
+            <summary>
+            Gets the proxy URI. (IWebProxy interface)
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpWindowsProxy.GetMultiProxy(System.Uri)">
+            <summary>
+            Gets the proxy URIs.
+            </summary>
+        </member>
+        <member name="M:System.Net.Http.HttpWindowsProxy.IsBypassed(System.Uri)">
+            <summary>
+            Checks if URI is subject to proxy or not.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.DiagnosticsHandler">
+            <summary>
+            DiagnosticHandler notifies DiagnosticSource subscribers about outgoing Http requests
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.DiagnosticsHandlerLoggingStrings">
+            <summary>
+            Defines names of DiagnosticListener and Write events for DiagnosticHandler
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.GlobalHttpSettings">
+            <summary>
+            Exposes process-wide settings for handlers.
+            </summary>
+        </member>
+        <member name="T:System.Net.Http.SocketsHttpPlaintextStreamFilterContext">
+            <summary>
+            Represents the context passed to the PlaintextStreamFilter for a SocketsHttpHandler instance.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpPlaintextStreamFilterContext.PlaintextStream">
+            <summary>
+            The plaintext Stream that will be used for HTTP protocol requests and responses.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpPlaintextStreamFilterContext.NegotiatedHttpVersion">
+            <summary>
+            The version of HTTP in use for this stream.
+            </summary>
+        </member>
+        <member name="P:System.Net.Http.SocketsHttpPlaintextStreamFilterContext.InitialRequestMessage">
+            <summary>
+            The initial HttpRequestMessage that is causing the stream to be used.
+            </summary>
+        </member>
+        <member name="T:System.Net.NetEventSource">
+            <summary>Provides logging facilities for System.Net libraries.</summary>
+        </member>
+        <member name="F:System.Net.NetEventSource.Log">
+            <summary>The single event source instance to use for all logging.</summary>
+        </member>
+        <member name="M:System.Net.NetEventSource.Info(System.Object,System.FormattableString,System.String)">
+            <summary>Logs an information message.</summary>
+            <param name="thisOrContextObject">`this`, or another object that serves to provide context for the operation.</param>
+            <param name="formattableString">The message to be logged.</param>
+            <param name="memberName">The calling member.</param>
+        </member>
+        <member name="M:System.Net.NetEventSource.Info(System.Object,System.Object,System.String)">
+            <summary>Logs an information message.</summary>
+            <param name="thisOrContextObject">`this`, or another object that serves to provide context for the operation.</param>
+            <param name="message">The message to be logged.</param>
+            <param name="memberName">The calling member.</param>
+        </member>
+        <member name="M:System.Net.NetEventSource.Error(System.Object,System.FormattableString,System.String)">
+            <summary>Logs an error message.</summary>
+            <param name="thisOrContextObject">`this`, or another object that serves to provide context for the operation.</param>
+            <param name="formattableString">The message to be logged.</param>
+            <param name="memberName">The calling member.</param>
+        </member>
+        <member name="M:System.Net.NetEventSource.Error(System.Object,System.Object,System.String)">
+            <summary>Logs an error message.</summary>
+            <param name="thisOrContextObject">`this`, or another object that serves to provide context for the operation.</param>
+            <param name="message">The message to be logged.</param>
+            <param name="memberName">The calling member.</param>
+        </member>
+        <member name="M:System.Net.NetEventSource.Verbose(System.Object,System.FormattableString,System.String)">
+            <summary>Logs an info message at verbose mode.</summary>
+            <param name="thisOrContextObject">`this`, or another object that serves to provide context for the operation.</param>
+            <param name="formattableString">The message to be logged.</param>
+            <param name="memberName">The calling member.</param>
+        </member>
+        <member name="M:System.Net.NetEventSource.Verbose(System.Object,System.Object,System.String)">
+            <summary>Logs an info at verbose mode.</summary>
+            <param name="thisOrContextObject">`this`, or another object that serves to provide context for the operation.</param>
+            <param name="message">The message to be logged.</param>
+            <param name="memberName">The calling member.</param>
+        </member>
+        <member name="M:System.Net.NetEventSource.DumpBuffer(System.Object,System.Byte[],System.String)">
+            <summary>Logs the contents of a buffer.</summary>
+            <param name="thisOrContextObject">`this`, or another object that serves to provide context for the operation.</param>
+            <param name="buffer">The buffer to be logged.</param>
+            <param name="memberName">The calling member.</param>
+        </member>
+        <member name="M:System.Net.NetEventSource.DumpBuffer(System.Object,System.Byte[],System.Int32,System.Int32,System.String)">
+            <summary>Logs the contents of a buffer.</summary>
+            <param name="thisOrContextObject">`this`, or another object that serves to provide context for the operation.</param>
+            <param name="buffer">The buffer to be logged.</param>
+            <param name="offset">The starting offset from which to log.</param>
+            <param name="count">The number of bytes to log.</param>
+            <param name="memberName">The calling member.</param>
+        </member>
+        <member name="M:System.Net.NetEventSource.DumpBuffer(System.Object,System.IntPtr,System.Int32,System.String)">
+            <summary>Logs the contents of a buffer.</summary>
+            <param name="thisOrContextObject">`this`, or another object that serves to provide context for the operation.</param>
+            <param name="bufferPtr">The starting location of the buffer to be logged.</param>
+            <param name="count">The number of bytes to log.</param>
+            <param name="memberName">The calling member.</param>
+        </member>
+        <member name="M:System.Net.NetEventSource.Associate(System.Object,System.Object,System.String)">
+            <summary>Logs a relationship between two objects.</summary>
+            <param name="first">The first object.</param>
+            <param name="second">The second object.</param>
+            <param name="memberName">The calling member.</param>
+        </member>
+        <member name="M:System.Net.NetEventSource.Associate(System.Object,System.Object,System.Object,System.String)">
+            <summary>Logs a relationship between two objects.</summary>
+            <param name="thisOrContextObject">`this`, or another object that serves to provide context for the operation.</param>
+            <param name="first">The first object.</param>
+            <param name="second">The second object.</param>
+            <param name="memberName">The calling member.</param>
+        </member>
+        <member name="M:System.Net.HttpKnownHeaderNames.TryGetHeaderName(System.Char[],System.Int32,System.Int32,System.String@)">
+            <summary>
+            Gets a known header name string from a matching char[] array segment, using a case-sensitive
+            ordinal comparison. Used to avoid allocating new strings for known header names.
+            </summary>
+        </member>
+        <member name="M:System.Net.HttpKnownHeaderNames.TryGetHeaderName(System.IntPtr,System.Int32,System.String@)">
+            <summary>
+            Gets a known header name string from a matching IntPtr buffer, using a case-sensitive
+            ordinal comparison. Used to avoid allocating new strings for known header names.
+            </summary>
+        </member>
+        <member name="M:System.Net.HttpKnownHeaderNames.TryMatch``1(System.String,``0,System.Int32,System.Int32,System.Func{System.String,``0,System.Int32,System.Int32,System.Boolean},System.String@)">
+            <summary>
+            Returns true if <paramref name="known"/> matches the <paramref name="key"/> char[] array segment,
+            using an ordinal comparison.
+            </summary>
+        </member>
+        <member name="T:System.IO.ReadOnlyMemoryStream">
+            <summary>Provides a <see cref="T:System.IO.Stream"/> for the contents of a <see cref="T:System.ReadOnlyMemory`1"/>.</summary>
+        </member>
+        <member name="T:System.Text.StringBuilderCache">
+            <summary>Provide a cached reusable instance of stringbuilder per thread.</summary>
+        </member>
+        <member name="M:System.Text.StringBuilderCache.Acquire(System.Int32)">
+            <summary>Get a StringBuilder for the specified capacity.</summary>
+            <remarks>If a StringBuilder of an appropriate size is cached, it will be returned and the cache emptied.</remarks>
+        </member>
+        <member name="M:System.Text.StringBuilderCache.Release(System.Text.StringBuilder)">
+            <summary>Place the specified builder in the cache if it is not too big.</summary>
+        </member>
+        <member name="M:System.Text.StringBuilderCache.GetStringAndRelease(System.Text.StringBuilder)">
+            <summary>ToString() the stringbuilder, Release it to the cache, and return the resulting string.</summary>
+        </member>
+        <member name="M:System.Text.SimpleRegex.IsMatchWithStarWildcard(System.ReadOnlySpan{System.Char},System.ReadOnlySpan{System.Char})">
+            <summary>
+            Perform a match between an input string and a pattern in which the only special character
+            is an asterisk, which can map to zero or more of any character in the input.
+            </summary>
+            <param name="input">The input to match.</param>
+            <param name="pattern">The pattern to match against.</param>
+            <returns>true if the input matches the pattern; otherwise, false.</returns>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.GetPinnableReference">
+            <summary>
+            Get a pinnable reference to the builder.
+            Does not ensure there is a null char after <see cref="P:System.Text.ValueStringBuilder.Length"/>
+            This overload is pattern matched in the C# 7.3+ compiler so you can omit
+            the explicit method call, and write eg "fixed (char* c = builder)"
+            </summary>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.GetPinnableReference(System.Boolean)">
+            <summary>
+            Get a pinnable reference to the builder.
+            </summary>
+            <param name="terminate">Ensures that the builder has a null char after <see cref="P:System.Text.ValueStringBuilder.Length"/></param>
+        </member>
+        <member name="P:System.Text.ValueStringBuilder.RawChars">
+            <summary>Returns the underlying storage of the builder.</summary>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.AsSpan(System.Boolean)">
+            <summary>
+            Returns a span around the contents of the builder.
+            </summary>
+            <param name="terminate">Ensures that the builder has a null char after <see cref="P:System.Text.ValueStringBuilder.Length"/></param>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.Grow(System.Int32)">
+            <summary>
+            Resize the internal buffer either by doubling current buffer size or
+            by adding <paramref name="additionalCapacityBeyondPos"/> to
+            <see cref="F:System.Text.ValueStringBuilder._pos"/> whichever is greater.
+            </summary>
+            <param name="additionalCapacityBeyondPos">
+            Number of chars requested beyond current position.
+            </param>
+        </member>
+        <member name="P:System.HexConverter.CharToHexLookup">
+            <summary>Map from an ASCII char to its hex value, e.g. arr['b'] == 11. 0xFF means it's not a hex digit.</summary>
+        </member>
+        <member name="P:System.NotImplemented.ByDesign">
+            <summary>
+            Permanent NotImplementedException with no message shown to user.
+            </summary>
+        </member>
+        <member name="M:System.NotImplemented.ByDesignWithMessage(System.String)">
+            <summary>
+            Permanent NotImplementedException with localized message shown to user.
+            </summary>
+        </member>
+        <member name="M:System.Runtime.ExceptionServices.ExceptionStackTrace.AddCurrentStack(System.Exception)">
+            <summary>In debug builds, appends the current stack trace to the exception.</summary>
+        </member>
+        <member name="T:System.Runtime.InteropServices.GeneratedDllImportAttribute">
+            <summary>
+            Indicates that method will be generated at compile time and invoke into an unmanaged library entry point
+            </summary>
+        </member>
+        <member name="F:System.Runtime.InteropServices.GeneratedMarshalling.ArrayMarshaller`1.StackBufferSize">
+            <summary>
+            Stack-alloc threshold set to 256 bytes to enable small arrays to be passed on the stack.
+            Number kept small to ensure that P/Invokes with a lot of array parameters doesn't
+            blow the stack since this is a new optimization in the code-generated interop.
+            </summary>
+        </member>
+        <member name="F:System.Runtime.InteropServices.GeneratedMarshalling.PtrArrayMarshaller`1.StackBufferSize">
+            <summary>
+            Stack-alloc threshold set to 256 bytes to enable small arrays to be passed on the stack.
+            Number kept small to ensure that P/Invokes with a lot of array parameters doesn't
+            blow the stack since this is a new optimization in the code-generated interop.
+            </summary>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskToApm">
+            <summary>
+            Provides support for efficiently using Tasks to implement the APM (Begin/End) pattern.
+            </summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.Begin(System.Threading.Tasks.Task,System.AsyncCallback,System.Object)">
+            <summary>
+            Marshals the Task as an IAsyncResult, using the supplied callback and state
+            to implement the APM pattern.
+            </summary>
+            <param name="task">The Task to be marshaled.</param>
+            <param name="callback">The callback to be invoked upon completion.</param>
+            <param name="state">The state to be stored in the IAsyncResult.</param>
+            <returns>An IAsyncResult to represent the task's asynchronous operation.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.End(System.IAsyncResult)">
+            <summary>Processes an IAsyncResult returned by Begin.</summary>
+            <param name="asyncResult">The IAsyncResult to unwrap.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.End``1(System.IAsyncResult)">
+            <summary>Processes an IAsyncResult returned by Begin.</summary>
+            <param name="asyncResult">The IAsyncResult to unwrap.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.GetTask(System.IAsyncResult)">
+            <summary>Gets the task represented by the IAsyncResult.</summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.ThrowArgumentException(System.IAsyncResult)">
+            <summary>Throws an argument exception for the invalid <paramref name="asyncResult"/>.</summary>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskToApm.TaskAsyncResult">
+            <summary>Provides a simple IAsyncResult that wraps a Task.</summary>
+            <remarks>
+            We could use the Task as the IAsyncResult if the Task's AsyncState is the same as the object state,
+            but that's very rare, in particular in a situation where someone cares about allocation, and always
+            using TaskAsyncResult simplifies things and enables additional optimizations.
+            </remarks>
+        </member>
+        <member name="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._task">
+            <summary>The wrapped Task.</summary>
+        </member>
+        <member name="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._callback">
+            <summary>Callback to invoke when the wrapped task completes.</summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.TaskAsyncResult.#ctor(System.Threading.Tasks.Task,System.Object,System.AsyncCallback)">
+            <summary>Initializes the IAsyncResult with the Task to wrap and the associated object state.</summary>
+            <param name="task">The Task to wrap.</param>
+            <param name="state">The new AsyncState value.</param>
+            <param name="callback">Callback to invoke when the wrapped task completes.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.TaskAsyncResult.InvokeCallback">
+            <summary>Invokes the callback.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.AsyncState">
+            <summary>Gets a user-defined object that qualifies or contains information about an asynchronous operation.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.CompletedSynchronously">
+            <summary>Gets a value that indicates whether the asynchronous operation completed synchronously.</summary>
+            <remarks>This is set lazily based on whether the <see cref="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._task"/> has completed by the time this object is created.</remarks>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.IsCompleted">
+            <summary>Gets a value that indicates whether the asynchronous operation has completed.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.AsyncWaitHandle">
+            <summary>Gets a <see cref="T:System.Threading.WaitHandle"/> that is used to wait for an asynchronous operation to complete.</summary>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskCompletionSourceWithCancellation`1">
+            <summary>
+            A <see cref="T:System.Threading.Tasks.TaskCompletionSource`1"/> that supports cancellation registration so that any
+            <seealso cref="T:System.OperationCanceledException"/>s contain the relevant <see cref="T:System.Threading.CancellationToken"/>,
+            while also avoiding unnecessary allocations for closure captures.
+            </summary>
+        </member>
+        <member name="P:System.SR.net_securityprotocolnotsupported">
+            <summary>The requested security protocol is not supported.</summary>
+        </member>
+        <member name="P:System.SR.net_http_httpmethod_format_error">
+            <summary>The format of the HTTP method is invalid.</summary>
+        </member>
+        <member name="P:System.SR.net_http_httpmethod_notsupported_error">
+            <summary>The HTTP method '{0}' is not supported on this platform.</summary>
+        </member>
+        <member name="P:System.SR.net_http_reasonphrase_format_error">
+            <summary>The reason phrase must not contain new-line characters.</summary>
+        </member>
+        <member name="P:System.SR.net_http_copyto_array_too_small">
+            <summary>The number of elements is greater than the available space from arrayIndex to the end of the destination array.</summary>
+        </member>
+        <member name="P:System.SR.net_http_headers_not_found">
+            <summary>The given header was not found.</summary>
+        </member>
+        <member name="P:System.SR.net_http_headers_single_value_header">
+            <summary>Cannot add value because header '{0}' does not support multiple values.</summary>
+        </member>
+        <member name="P:System.SR.net_http_headers_invalid_header_name">
+            <summary>The header name format is invalid.</summary>
+        </member>
+        <member name="P:System.SR.net_http_headers_invalid_value">
+            <summary>The format of value '{0}' is invalid.</summary>
+        </member>
+        <member name="P:System.SR.net_http_headers_not_allowed_header_name">
+            <summary>Misused header name, '{0}'. Make sure request headers are used with HttpRequestMessage, response headers with HttpResponseMessage, and content headers with HttpContent objects.</summary>
+        </member>
+        <member name="P:System.SR.net_http_headers_invalid_host_header">
+            <summary>The specified value is not a valid 'Host' header string.</summary>
+        </member>
+        <member name="P:System.SR.net_http_headers_invalid_etag_name">
+            <summary>The specified value is not a valid quoted string.</summary>
+        </member>
+        <member name="P:System.SR.net_http_headers_invalid_range">
+            <summary>Invalid range. At least one of the two parameters must not be null.</summary>
+        </member>
+        <member name="P:System.SR.net_http_headers_no_newlines">
+            <summary>New-line characters are not allowed in header values.</summary>
+        </member>
+        <member name="P:System.SR.net_http_content_buffersize_exceeded">
+            <summary>Cannot write more bytes to the buffer than the configured maximum buffer size: {0}.</summary>
+        </member>
+        <member name="P:System.SR.net_http_content_no_task_returned">
+            <summary>The async operation did not return a System.Threading.Tasks.Task object.</summary>
+        </member>
+        <member name="P:System.SR.net_http_content_stream_already_read">
+            <summary>The stream was already consumed. It cannot be read again.</summary>
+        </member>
+        <member name="P:System.SR.net_http_content_readonly_stream">
+            <summary>The stream does not support writing.</summary>
+        </member>
+        <member name="P:System.SR.net_http_content_invalid_charset">
+            <summary>The character set provided in ContentType is invalid. Cannot read content as string using an invalid character set.</summary>
+        </member>
+        <member name="P:System.SR.net_http_content_stream_copy_error">
+            <summary>Error while copying content to a stream.</summary>
+        </member>
+        <member name="P:System.SR.net_http_content_read_as_stream_has_task">
+            <summary>The content's stream has already been retrieved via async ReadAsStreamAsync and cannot be subsequently accessed synchronously.</summary>
+        </member>
+        <member name="P:System.SR.net_http_argument_empty_string">
+            <summary>The value cannot be null or empty.</summary>
+        </member>
+        <member name="P:System.SR.net_http_client_request_already_sent">
+            <summary>The request message was already sent. Cannot send the same request message multiple times.</summary>
+        </member>
+        <member name="P:System.SR.net_http_operation_started">
+            <summary>This instance has already started one or more requests. Properties can only be modified before sending the first request.</summary>
+        </member>
+        <member name="P:System.SR.net_http_client_execution_error">
+            <summary>An error occurred while sending the request.</summary>
+        </member>
+        <member name="P:System.SR.net_http_client_absolute_baseaddress_required">
+            <summary>The base address must be an absolute URI.</summary>
+        </member>
+        <member name="P:System.SR.net_http_client_invalid_requesturi">
+            <summary>An invalid request URI was provided. Either the request URI must be an absolute URI or BaseAddress must be set.</summary>
+        </member>
+        <member name="P:System.SR.net_http_unsupported_requesturi_scheme">
+            <summary>The '{0}' scheme is not supported.</summary>
+        </member>
+        <member name="P:System.SR.net_http_parser_invalid_base64_string">
+            <summary>Value '{0}' is not a valid Base64 string. Error: {1}</summary>
+        </member>
+        <member name="P:System.SR.net_http_handler_noresponse">
+            <summary>Handler did not return a response message.</summary>
+        </member>
+        <member name="P:System.SR.net_http_handler_norequest">
+            <summary>A request message must be provided. It cannot be null.</summary>
+        </member>
+        <member name="P:System.SR.net_http_message_not_success_statuscode">
+            <summary>Response status code does not indicate success: {0} ({1}).</summary>
+        </member>
+        <member name="P:System.SR.net_http_content_field_too_long">
+            <summary>The field cannot be longer than {0} characters.</summary>
+        </member>
+        <member name="P:System.SR.net_http_log_headers_no_newlines">
+            <summary>Value for header '{0}' contains new-line characters. Value: '{1}'.</summary>
+        </member>
+        <member name="P:System.SR.net_http_log_headers_invalid_quality">
+            <summary>The 'q' value is invalid: '{0}'.</summary>
+        </member>
+        <member name="P:System.SR.net_http_handler_not_assigned">
+            <summary>The inner handler has not been assigned.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_enable_first">
+            <summary>The {0} property must be set to '{1}' to use this property.</summary>
+        </member>
+        <member name="P:System.SR.net_http_content_buffersize_limit">
+            <summary>Buffering more than {0} bytes is not supported.</summary>
+        </member>
+        <member name="P:System.SR.net_http_value_not_supported">
+            <summary>The value '{0}' is not supported for property '{1}'.</summary>
+        </member>
+        <member name="P:System.SR.net_http_io_read">
+            <summary>The read operation failed, see inner exception.</summary>
+        </member>
+        <member name="P:System.SR.net_http_io_read_incomplete">
+            <summary>Unable to read data from the transport connection. The connection was closed before all data could be read. Expected {0} bytes, read {1} bytes.</summary>
+        </member>
+        <member name="P:System.SR.net_http_io_write">
+            <summary>The write operation failed, see inner exception.</summary>
+        </member>
+        <member name="P:System.SR.net_http_chunked_not_allowed_with_empty_content">
+            <summary>'Transfer-Encoding: chunked' header can not be used when content object is not specified.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_cookiecontainer">
+            <summary>When using CookieUsePolicy.UseSpecifiedCookieContainer, the CookieContainer property must not be null.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_proxyusepolicy">
+            <summary>When using a non-null Proxy, the WindowsProxyUsePolicy property must be set to WindowsProxyUsePolicy.UseCustomProxy.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_proxy">
+            <summary>When using WindowsProxyUsePolicy.UseCustomProxy, the Proxy property must not be null.</summary>
+        </member>
+        <member name="P:System.SR.net_http_value_must_be_greater_than">
+            <summary>The specified value must be greater than {0}.</summary>
+        </member>
+        <member name="P:System.SR.net_http_value_must_be_greater_than_or_equal">
+            <summary>The specified value '{0}' must be greater than or equal to '{1}'.</summary>
+        </member>
+        <member name="P:System.SR.net_cookie_attribute">
+            <summary>The '{0}'='{1}' part of the cookie is invalid.</summary>
+        </member>
+        <member name="P:System.SR.ArgumentOutOfRange_FileLengthTooBig">
+            <summary>Specified file length was too large for the file system.</summary>
+        </member>
+        <member name="P:System.SR.IO_FileExists_Name">
+            <summary>The file '{0}' already exists.</summary>
+        </member>
+        <member name="P:System.SR.IO_FileNotFound">
+            <summary>Unable to find the specified file.</summary>
+        </member>
+        <member name="P:System.SR.IO_FileNotFound_FileName">
+            <summary>Could not find file '{0}'.</summary>
+        </member>
+        <member name="P:System.SR.IO_PathNotFound_NoPathName">
+            <summary>Could not find a part of the path.</summary>
+        </member>
+        <member name="P:System.SR.IO_PathNotFound_Path">
+            <summary>Could not find a part of the path '{0}'.</summary>
+        </member>
+        <member name="P:System.SR.IO_PathTooLong">
+            <summary>The specified file name or path is too long, or a component of the specified path is too long.</summary>
+        </member>
+        <member name="P:System.SR.IO_SharingViolation_File">
+            <summary>The process cannot access the file '{0}' because it is being used by another process.</summary>
+        </member>
+        <member name="P:System.SR.IO_SharingViolation_NoFileName">
+            <summary>The process cannot access the file because it is being used by another process.</summary>
+        </member>
+        <member name="P:System.SR.UnauthorizedAccess_IODenied_NoPathName">
+            <summary>Access to the path is denied.</summary>
+        </member>
+        <member name="P:System.SR.UnauthorizedAccess_IODenied_Path">
+            <summary>Access to the path '{0}' is denied.</summary>
+        </member>
+        <member name="P:System.SR.net_http_content_no_concurrent_reads">
+            <summary>The stream does not support concurrent read operations.</summary>
+        </member>
+        <member name="P:System.SR.net_http_username_empty_string">
+            <summary>The username for a credential object cannot be null or empty.</summary>
+        </member>
+        <member name="P:System.SR.net_http_no_concurrent_io_allowed">
+            <summary>The stream does not support concurrent I/O read or write operations.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response">
+            <summary>The server returned an invalid or unrecognized response.</summary>
+        </member>
+        <member name="P:System.SR.net_http_request_content_length_mismatch">
+            <summary>Sent {0} request content bytes, but Content-Length promised {1}.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response_premature_eof">
+            <summary>The response ended prematurely.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response_missing_frame">
+            <summary>The response ended prematurely while waiting for the next frame from the server.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response_premature_eof_bytecount">
+            <summary>The response ended prematurely, with at least {0} additional bytes expected.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response_chunk_header_invalid">
+            <summary>Received chunk header length could not be parsed: '{0}'.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response_chunk_extension_invalid">
+            <summary>Received an invalid chunk extension: '{0}'.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response_chunk_terminator_invalid">
+            <summary>Received an invalid chunk terminator: '{0}'.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response_status_line">
+            <summary>Received an invalid status line: '{0}'.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response_status_code">
+            <summary>Received an invalid status code: '{0}'.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response_status_reason">
+            <summary>Received status phrase could not be decoded with iso-8859-1: '{0}'.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response_multiple_status_codes">
+            <summary>The response contained more than one status code.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response_header_folder">
+            <summary>Received an invalid folded header.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response_header_line">
+            <summary>Received an invalid header line: '{0}'.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response_header_name">
+            <summary>Received an invalid header name: '{0}'.</summary>
+        </member>
+        <member name="P:System.SR.net_http_request_aborted">
+            <summary>The request was aborted.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_response_pseudo_header_in_trailer">
+            <summary>Received an HTTP/2 pseudo-header as a trailing header.</summary>
+        </member>
+        <member name="P:System.SR.net_http_unix_handler_disposed">
+            <summary>The handler was disposed of while active operations were in progress.</summary>
+        </member>
+        <member name="P:System.SR.net_http_buffer_insufficient_length">
+            <summary>The buffer was not long enough.</summary>
+        </member>
+        <member name="P:System.SR.net_http_response_headers_exceeded_length">
+            <summary>The HTTP response headers length exceeded the set limit of {0} bytes.</summary>
+        </member>
+        <member name="P:System.SR.ArgumentOutOfRange_NeedNonNegativeNum">
+            <summary>Non-negative number required.</summary>
+        </member>
+        <member name="P:System.SR.ArgumentOutOfRange_NeedPosNum">
+            <summary>Positive number required.</summary>
+        </member>
+        <member name="P:System.SR.NotSupported_UnreadableStream">
+            <summary>Stream does not support reading.</summary>
+        </member>
+        <member name="P:System.SR.NotSupported_UnwritableStream">
+            <summary>Stream does not support writing.</summary>
+        </member>
+        <member name="P:System.SR.ObjectDisposed_StreamClosed">
+            <summary>Cannot access a closed stream.</summary>
+        </member>
+        <member name="P:System.SR.net_http_feature_requires_Windows10Version1607">
+            <summary>Using this feature requires Windows 10 Version 1607.</summary>
+        </member>
+        <member name="P:System.SR.net_http_feature_UWPClientCertSupportRequiresCertInPersonalCertificateStore">
+            <summary>Client certificate was not found in the personal (\"MY\") certificate store. In UWP, client certificates are only supported if they have been added to that certificate store.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_proxy_scheme">
+            <summary>Only the 'http', 'socks4', 'socks4a' and 'socks5' schemes are allowed for proxies.</summary>
+        </member>
+        <member name="P:System.SR.net_http_request_invalid_char_encoding">
+            <summary>Request headers must contain only ASCII characters.</summary>
+        </member>
+        <member name="P:System.SR.net_http_ssl_connection_failed">
+            <summary>The SSL connection could not be established, see inner exception.</summary>
+        </member>
+        <member name="P:System.SR.net_http_unsupported_chunking">
+            <summary>HTTP 1.0 does not support chunking.</summary>
+        </member>
+        <member name="P:System.SR.net_http_unsupported_version">
+            <summary>Request HttpVersion 0.X is not supported.  Use 1.0 or above.</summary>
+        </member>
+        <member name="P:System.SR.IO_SeekBeforeBegin">
+            <summary>An attempt was made to move the position before the beginning of the stream.</summary>
+        </member>
+        <member name="P:System.SR.net_ssl_app_protocols_invalid">
+            <summary>The application protocol list is invalid.</summary>
+        </member>
+        <member name="P:System.SR.net_ssl_http2_requires_tls12">
+            <summary>HTTP/2 requires TLS 1.2 or newer, but '{0}' was negotiated.</summary>
+        </member>
+        <member name="P:System.SR.IO_PathTooLong_Path">
+            <summary>The path '{0}' is too long, or a component of the specified path is too long.</summary>
+        </member>
+        <member name="P:System.SR.net_http_request_no_host">
+            <summary>CONNECT request must contain Host header.</summary>
+        </member>
+        <member name="P:System.SR.net_http_winhttp_error">
+            <summary>Error {0} calling {1}, '{2}'.</summary>
+        </member>
+        <member name="P:System.SR.net_http_http2_connection_error">
+            <summary>The HTTP/2 server sent invalid data on the connection. HTTP/2 error code '{0}' (0x{1}).</summary>
+        </member>
+        <member name="P:System.SR.net_http_http2_stream_error">
+            <summary>The HTTP/2 server reset the stream. HTTP/2 error code '{0}' (0x{1}).</summary>
+        </member>
+        <member name="P:System.SR.net_http_http2_connection_not_established">
+            <summary>An HTTP/2 connection could not be established because the server did not complete the HTTP/2 handshake.</summary>
+        </member>
+        <member name="P:System.SR.net_http_http2_invalidinitialstreamwindowsize">
+            <summary>The initial HTTP/2 stream window size must be between {0} and {1}.</summary>
+        </member>
+        <member name="P:System.SR.net_MethodNotImplementedException">
+            <summary>This method is not implemented by this class.</summary>
+        </member>
+        <member name="P:System.SR.event_OperationReturnedSomething">
+            <summary>{0} returned {1}.</summary>
+        </member>
+        <member name="P:System.SR.net_log_operation_failed_with_error">
+            <summary>{0} failed with error {1}.</summary>
+        </member>
+        <member name="P:System.SR.net_completed_result">
+            <summary>This operation cannot be performed on a completed asynchronous result object.</summary>
+        </member>
+        <member name="P:System.SR.net_invalid_enum">
+            <summary>The specified value is not valid in the '{0}' enumeration.</summary>
+        </member>
+        <member name="P:System.SR.net_auth_message_not_encrypted">
+            <summary>Protocol error: A received message contains a valid signature but it was not encrypted as required by the effective Protection Level.</summary>
+        </member>
+        <member name="P:System.SR.net_securitypackagesupport">
+            <summary>The requested security package is not supported.</summary>
+        </member>
+        <member name="P:System.SR.SSPIInvalidHandleType">
+            <summary>'{0}' is not a supported handle type.</summary>
+        </member>
+        <member name="P:System.SR.net_http_authconnectionfailure">
+            <summary>Authentication failed because the connection could not be reused.</summary>
+        </member>
+        <member name="P:System.SR.net_nego_server_not_supported">
+            <summary>Server implementation is not supported</summary>
+        </member>
+        <member name="P:System.SR.net_nego_protection_level_not_supported">
+            <summary>Requested protection level is not supported with the GSSAPI implementation currently installed.</summary>
+        </member>
+        <member name="P:System.SR.net_context_buffer_too_small">
+            <summary>Insufficient buffer space. Required: {0} Actual: {1}.</summary>
+        </member>
+        <member name="P:System.SR.net_gssapi_operation_failed_detailed">
+            <summary>GSSAPI operation failed with error - {0} ({1}).</summary>
+        </member>
+        <member name="P:System.SR.net_gssapi_operation_failed">
+            <summary>GSSAPI operation failed with status: {0} (Minor status: {1}).</summary>
+        </member>
+        <member name="P:System.SR.net_gssapi_operation_failed_detailed_majoronly">
+            <summary>GSSAPI operation failed with error - {0}.</summary>
+        </member>
+        <member name="P:System.SR.net_gssapi_operation_failed_majoronly">
+            <summary>GSSAPI operation failed with status: {0}.</summary>
+        </member>
+        <member name="P:System.SR.net_gssapi_ntlm_missing_plugin">
+            <summary>NTLM authentication requires the GSSAPI plugin 'gss-ntlmssp'.</summary>
+        </member>
+        <member name="P:System.SR.net_ntlm_not_possible_default_cred">
+            <summary>NTLM authentication is not possible with default credentials on this platform.</summary>
+        </member>
+        <member name="P:System.SR.net_nego_not_supported_empty_target_with_defaultcreds">
+            <summary>Target name should be non empty if default credentials are passed.</summary>
+        </member>
+        <member name="P:System.SR.net_http_hpack_huffman_decode_failed">
+            <summary>Huffman-coded literal string failed to decode.</summary>
+        </member>
+        <member name="P:System.SR.net_http_hpack_incomplete_header_block">
+            <summary>Incomplete header block received.</summary>
+        </member>
+        <member name="P:System.SR.net_http_hpack_late_dynamic_table_size_update">
+            <summary>Dynamic table size update received after beginning of header block.</summary>
+        </member>
+        <member name="P:System.SR.net_http_hpack_bad_integer">
+            <summary>HPACK integer exceeds limits or has an overlong encoding.</summary>
+        </member>
+        <member name="P:System.SR.net_http_disposed_while_in_use">
+            <summary>The object was disposed while operations were in progress.</summary>
+        </member>
+        <member name="P:System.SR.net_http_hpack_large_table_size_update">
+            <summary>Dynamic table size update to {0} bytes exceeds limit of {1} bytes.</summary>
+        </member>
+        <member name="P:System.SR.net_http_server_shutdown">
+            <summary>The server shut down the connection.</summary>
+        </member>
+        <member name="P:System.SR.net_http_hpack_invalid_index">
+            <summary>Invalid header index: {0} is outside of static table and no dynamic table entry found.</summary>
+        </member>
+        <member name="P:System.SR.net_http_hpack_unexpected_end">
+            <summary>End of headers reached with incomplete token.</summary>
+        </member>
+        <member name="P:System.SR.net_http_hpack_encode_failure">
+            <summary>Failed to HPACK encode the headers.</summary>
+        </member>
+        <member name="P:System.SR.net_http_headers_exceeded_length">
+            <summary>The HTTP headers length exceeded the set limit of {0} bytes.</summary>
+        </member>
+        <member name="P:System.SR.net_http_invalid_header_name">
+            <summary>Received an invalid header name: '{0}'.</summary>
+        </member>
+        <member name="P:System.SR.net_http_http3_connection_error">
+            <summary>The HTTP/3 server sent invalid data on the connection. HTTP/3 error code '{0}' (0x{1}).</summary>
+        </member>
+        <member name="P:System.SR.net_http_http3_stream_error">
+            <summary>The HTTP/3 server sent invalid data on the stream. HTTP/3 error code '{0}' (0x{1}).</summary>
+        </member>
+        <member name="P:System.SR.net_http_retry_on_older_version">
+            <summary>The server is unable to process the request using the current HTTP version and indicates the request should be retried on an older HTTP version.</summary>
+        </member>
+        <member name="P:System.SR.net_http_content_write_larger_than_content_length">
+            <summary>Unable to write content to request stream; content would exceed Content-Length.</summary>
+        </member>
+        <member name="P:System.SR.net_http_qpack_no_dynamic_table">
+            <summary>The HTTP/3 server attempted to reference a dynamic table index that does not exist.</summary>
+        </member>
+        <member name="P:System.SR.net_http_request_timedout">
+            <summary>The request was canceled due to the configured HttpClient.Timeout of {0} seconds elapsing.</summary>
+        </member>
+        <member name="P:System.SR.net_http_connect_timedout">
+            <summary>A connection could not be established within the configured ConnectTimeout.</summary>
+        </member>
+        <member name="P:System.SR.net_quic_connectionaborted">
+            <summary>Connection aborted by peer ({0}).</summary>
+        </member>
+        <member name="P:System.SR.net_quic_notsupported">
+            <summary>QUIC is not supported on this platform. See https://aka.ms/dotnetquic</summary>
+        </member>
+        <member name="P:System.SR.net_quic_operationaborted">
+            <summary>Operation aborted.</summary>
+        </member>
+        <member name="P:System.SR.net_quic_streamaborted">
+            <summary>Stream aborted by peer ({0}).</summary>
+        </member>
+        <member name="P:System.SR.net_http_missing_sync_implementation">
+            <summary>The synchronous method is not supported by '{0}'. If you're using a custom '{1}' and wish to use synchronous HTTP methods, you must override its '{2}' virtual method.</summary>
+        </member>
+        <member name="P:System.SR.net_http_http2_sync_not_supported">
+            <summary>The synchronous method is not supported by '{0}' for HTTP/2 or higher. Either use an asynchronous method or downgrade the request version to HTTP/1.1 or lower.</summary>
+        </member>
+        <member name="P:System.SR.net_http_upgrade_not_enabled_sync">
+            <summary>HTTP request version upgrade is not enabled for synchronous '{0}'. Do not use '{1}' version policy for synchronous HTTP methods.</summary>
+        </member>
+        <member name="P:System.SR.net_http_requested_version_cannot_establish">
+            <summary>Requesting HTTP version {0} with version policy {1} while unable to establish HTTP/{2} connection.</summary>
+        </member>
+        <member name="P:System.SR.net_http_requested_version_alpn_refused">
+            <summary>Requesting HTTP version {0} with version policy {1} while server returned HTTP/1.1 in ALPN.</summary>
+        </member>
+        <member name="P:System.SR.net_http_requested_version_server_refused">
+            <summary>Requesting HTTP version {0} with version policy {1} while server offers only version fallback.</summary>
+        </member>
+        <member name="P:System.SR.net_http_exception_during_plaintext_filter">
+            <summary>An exception occurred while invoking the PlaintextStreamFilter.</summary>
+        </member>
+        <member name="P:System.SR.net_http_null_from_connect_callback">
+            <summary>The user-supplied ConnectCallback returned null.</summary>
+        </member>
+        <member name="P:System.SR.net_http_null_from_plaintext_filter">
+            <summary>The user-supplied PlaintextStreamFilter returned null.</summary>
+        </member>
+        <member name="P:System.SR.net_http_marshalling_response_promise_from_fetch">
+            <summary>Internal error marshalling the response Promise from `fetch`.</summary>
+        </member>
+        <member name="P:System.SR.net_http_synchronous_reads_not_supported">
+            <summary>Synchronous reads are not supported, use ReadAsync instead.</summary>
+        </member>
+        <member name="P:System.SR.net_socks_auth_failed">
+            <summary>Failed to authenticate with the SOCKS server.</summary>
+        </member>
+        <member name="P:System.SR.net_socks_bad_address_type">
+            <summary>SOCKS server returned an unknown address type.</summary>
+        </member>
+        <member name="P:System.SR.net_socks_connection_failed">
+            <summary>SOCKS server failed to connect to the destination.</summary>
+        </member>
+        <member name="P:System.SR.net_socks_ipv6_notsupported">
+            <summary>SOCKS4 does not support IPv6 addresses.</summary>
+        </member>
+        <member name="P:System.SR.net_socks_no_auth_method">
+            <summary>SOCKS server did not return a suitable authentication method.</summary>
+        </member>
+        <member name="P:System.SR.net_socks_no_ipv4_address">
+            <summary>Failed to resolve the destination host to an IPv4 address.</summary>
+        </member>
+        <member name="P:System.SR.net_socks_unexpected_version">
+            <summary>Unexpected SOCKS protocol version. Required {0}, got {1}.</summary>
+        </member>
+        <member name="P:System.SR.net_socks_string_too_long">
+            <summary>Encoding the {0} took more than the maximum of 255 bytes.</summary>
+        </member>
+        <member name="P:System.SR.net_socks_auth_required">
+            <summary>SOCKS server requested username &amp; password authentication.</summary>
+        </member>
+        <member name="P:System.SR.net_http_proxy_tunnel_returned_failure_status_code">
+            <summary>The proxy tunnel request to proxy '{0}' failed with status code '{1}'."</summary>
+        </member>
+        <member name="T:Interop.BOOL">
+            <summary>
+            Blittable version of Windows BOOL type. It is convenient in situations where
+            manual marshalling is required, or to avoid overhead of regular bool marshalling.
+            </summary>
+            <remarks>
+            Some Windows APIs return arbitrary integer values although the return type is defined
+            as BOOL. It is best to never compare BOOL to TRUE. Always use bResult != BOOL.FALSE
+            or bResult == BOOL.FALSE .
+            </remarks>
+        </member>
+        <member name="F:Interop.UNICODE_STRING.Length">
+            <summary>
+            Length in bytes, not including the null terminator, if any.
+            </summary>
+        </member>
+        <member name="F:Interop.UNICODE_STRING.MaximumLength">
+            <summary>
+            Max size of the buffer in bytes
+            </summary>
+        </member>
+        <member name="M:Interop.Kernel32.GetMessage(System.Int32)">
+            <summary>
+                Returns a string message for the specified Win32 error code.
+            </summary>
+        </member>
+    </members>
+</doc>
